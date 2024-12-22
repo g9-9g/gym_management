@@ -25,8 +25,8 @@
                                 <Font name="Tahoma" size="20.0" />
                             </font>
                         </Label>
-                        <Label layoutX="129.0" layoutY="125.0" text="Trainer Portal" />
-                        <TextField fx:id="login_trainerID" layoutX="39.0" layoutY="177.0" onAction="#loginAccount" prefHeight="30.0" prefWidth="250.0" promptText="trainer ID" stylesheets="@style/portal.css">
+                        <Label layoutX="129.0" layoutY="125.0" text="Manager Portal" />
+                        <TextField fx:id="login_managerID" layoutX="39.0" layoutY="177.0" onAction="#loginAccount" prefHeight="30.0" prefWidth="250.0" promptText="Manager ID" stylesheets="@style/portal.css">
                             <styleClass>
                                 <String fx:value="textfield-2" />
                                 <String fx:value="white-bg" />
@@ -40,7 +40,7 @@
                         </PasswordField>
                         <TextField fx:id="login_showPassword" layoutX="39.0" layoutY="213.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" stylesheets="@style/portal.css" visible="false">
                             <styleClass>
-                                <String fx:value="textfield-1" />
+                                <String fx:value="textfield-2" />
                                 <String fx:value="white-bg" />
                             </styleClass>
                         </TextField>
@@ -70,7 +70,7 @@
                                 <Font name="Tahoma" size="20.0" />
                             </font>
                         </Label>
-                        <Label layoutX="129.0" layoutY="124.0" text="Trainer Portal" />
+                        <Label layoutX="129.0" layoutY="124.0" text="Manager Portal" />
                         <TextField fx:id="register_fullName" layoutX="39.0" layoutY="172.0" prefHeight="30.0" prefWidth="250.0" promptText="Full Name" stylesheets="@style/portal.css">
                             <styleClass>
                                 <String fx:value="textfield-2" />
@@ -83,7 +83,7 @@
                                 <String fx:value="white-bg" />
                             </styleClass>
                         </TextField>
-                        <TextField fx:id="register_trainerID" layoutX="40.0" layoutY="246.0" prefHeight="30.0" prefWidth="250.0" promptText="trainer ID" stylesheets="@style/portal.css">
+                        <TextField fx:id="register_managerID" layoutX="40.0" layoutY="246.0" prefHeight="30.0" prefWidth="250.0" promptText="Manager ID" stylesheets="@style/portal.css">
                             <styleClass>
                                 <String fx:value="textfield-2" />
                                 <String fx:value="white-bg" />
@@ -97,7 +97,7 @@
                         </PasswordField>
                         <TextField fx:id="register_showPassword" layoutX="41.0" layoutY="282.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" stylesheets="@style/portal.css" visible="false">
                             <styleClass>
-                                <String fx:value="textfield-1" />
+                                <String fx:value="textfield-2" />
                                 <String fx:value="white-bg" />
                             </styleClass>
                         </TextField>

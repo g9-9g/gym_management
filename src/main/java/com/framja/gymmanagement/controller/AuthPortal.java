@@ -1,18 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.framja.gymmanagement.controller;
 
 import java.net.URL;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.framja.gymmanagement.GymApplication;
+import com.framja.gymmanagement.model.*;
+import com.framja.gymmanagement.service.AuthService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,16 +21,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-/**
- *
- * @author WINDOWS 10
- */
-public class AdminPortal implements Initializable {
 
-    // LETS NAME ALL COMPONENTS WE HAVE ON ADMIN PAGE 
+public class AuthPortal implements Initializable {
+    
     @FXML
     private AnchorPane main_form;
 
@@ -88,26 +79,47 @@ public class AdminPortal implements Initializable {
     @FXML
     private Hyperlink register_loginHere;
 
-    //    DATABASE TOOLS
-//    private Connection connect;
-//    private PreparedStatement prepare;
-//    private ResultSet result;
+    @FXML
+    private ImageView register_loginImage;
+
+    private Role cur_page_role = Role.ADMIN;
 
     private AlertPrompt alert = new AlertPrompt();
 
-    public void loginAccount() {
+    private void redirectToDashboard(Role role) {
+        try {
+            Parent root;
+            switch (role) {
+                case Role.ADMIN:
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
+                    break;
+                case Role.MEMBER:
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
+                    break;
+                case Role.TRAINER:
+                    root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                    break;
+                case Role.GYMMANAGER:
+                    root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + role);
+            }
+            Stage stage = new Stage();
+            stage.setTitle("Gym Management System | " + cur_page_role.toString() + "Portal");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void loginAccount() {
         if (login_username.getText().isEmpty()
                 || login_password.getText().isEmpty()) {
             alert.errorMessage("Incorrect Username/Password");
         } else {
-
-            // String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
-
-            // connect = Database.connectDB();
-
             try {
-
                 if (!login_showPassword.isVisible()) {
                     if (!login_showPassword.getText().equals(login_password.getText())) {
                         login_showPassword.setText(login_password.getText());
@@ -117,35 +129,15 @@ public class AdminPortal implements Initializable {
                         login_password.setText(login_showPassword.getText());
                     }
                 }
+                User cur = AuthService.login(login_username.getText(), login_password.getText());
+                if (cur != null && cur.getRole() == cur_page_role) {
 
-//                prepare = connect.prepareStatement(sql);
-//                prepare.setString(1, login_username.getText());
-//                prepare.setString(2, login_password.getText());
-//                result = prepare.executeQuery();
-
-                // if (result.next()) {
-                if (true) {
-                    // TO GET THE USERNAME
-
-                    //Data.admin_username = login_username.getText();
-                    //Data.admin_id = Integer.parseInt(result.getString("admin_id"));
-
-
-                    // IF CORRECT USERNAME AND PASSWORD
                     alert.successMessage("Login Successfully!");
 
-                    // LINK MAIN FORM FOR ADMIN
-                    Parent root = FXMLLoader.load(GymApplication.class.getResource("hello-view.fxml"));
-                    Stage stage = new Stage();
+                    redirectToDashboard(cur_page_role);
 
-                    stage.setTitle("Hospital Management System | Admin Portal");
-                    stage.setScene(new Scene(root));
-                    stage.show();
-
-                    // TO HIDE YOUR ADMIN PAGE (LOGIN FORM)
                     login_loginBtn.getScene().getWindow().hide();
                 } else {
-                    // IF WRONG USERNAME OR PASSWORD
                     alert.errorMessage("Incorrect Username/Password");
                 }
 
@@ -158,7 +150,6 @@ public class AdminPortal implements Initializable {
     }
 
     public void loginShowPassword() {
-
         if (login_checkBox.isSelected()) {
             login_showPassword.setText(login_password.getText());
             login_showPassword.setVisible(true);
@@ -168,26 +159,13 @@ public class AdminPortal implements Initializable {
             login_showPassword.setVisible(false);
             login_password.setVisible(true);
         }
-
     }
 
     public void registerAccount() {
-
-        if (register_email.getText().isEmpty()
-                || register_username.getText().isEmpty()
-                || register_password.getText().isEmpty()) {
-            // LETS CREATE OUR ALERT MESSAGE
+        if (register_email.getText().isEmpty() || register_username.getText().isEmpty() || register_password.getText().isEmpty()) {
             alert.errorMessage("Please fill all blank fields");
         } else {
-
-            // WE WILL CHECK IF THE USERNAME THAT USER ENTERED IS ALREADY EXIST TO OUR DATABASE 
-//            String checkUsername = "SELECT * FROM admin WHERE username = '"
-//                    + register_username.getText() + "'";
-//
-//            connect = Database.connectDB();
-
             try {
-
                 if (!register_showPassword.isVisible()) {
                     if (!register_showPassword.getText().equals(register_password.getText())) {
                         register_showPassword.setText(register_password.getText());
@@ -198,32 +176,29 @@ public class AdminPortal implements Initializable {
                     }
                 }
 
-//                prepare = connect.prepareStatement(checkUsername);
-//                result = prepare.executeQuery();
-
-                if (false) {
-                    alert.errorMessage(register_username.getText() + " is already exist!");
-                } else if (register_password.getText().length() < 8) { // CHECK IF THE CHARACTERS OF THE PASSWORD IS LESS THAN TO 8
+                if (register_password.getText().length() < 8) {
                     alert.errorMessage("Invalid Password, at least 8 characters needed");
                 } else {
-                    // TO INSERT THE DATA TO OUR DATABASE
-                    String insertData = "INSERT INTO admin (email, username, password, date) VALUES(?,?,?,?)";
-
-                    Date date = new Date();
-//                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-//
-//                    prepare = connect.prepareStatement(insertData);
-//                    prepare.setString(1, register_email.getText());
-//                    prepare.setString(2, register_username.getText());
-//                    prepare.setString(3, register_password.getText());
-//                    prepare.setString(4, String.valueOf(sqlDate));
-//
-//                    prepare.executeUpdate();
+                    User new_u;
+                    if (cur_page_role == Role.ADMIN) {
+                        new_u = new Admin(register_username.getText(), "", register_password.getText());
+                        AuthService.register(new_u);
+                    } else if (cur_page_role == Role.TRAINER) {
+                        new_u = new Trainer(register_username.getText(), "", register_password.getText());
+                        AuthService.register(new_u);
+                    } else if (cur_page_role == Role.GYMMANAGER) {
+                        new_u = new GymManager(register_username.getText(), "", register_password.getText());
+                        AuthService.register(new_u);
+                    } else if (cur_page_role == Role.MEMBER) {
+                        new_u = new Member(register_username.getText(), "", register_password.getText());
+                        AuthService.register(new_u);
+                    } else {
+                        throw new IllegalStateException("Unexpected value: " + cur_page_role);
+                    }
 
                     alert.successMessage("Registered Successfully!");
                     registerClear();
 
-                    // TO SWITCH THE FORM INTO LOGIN FORM
                     login_form.setVisible(true);
                     register_form.setVisible(false);
                 }
@@ -241,7 +216,6 @@ public class AdminPortal implements Initializable {
     }
 
     public void registerShowPassword() {
-
         if (register_checkBox.isSelected()) {
             register_showPassword.setText(register_password.getText());
             register_showPassword.setVisible(true);
@@ -254,25 +228,16 @@ public class AdminPortal implements Initializable {
 
     }
 
-    public void userList() {
+    public void roleList() {
+        List<String> roleList = Arrays.asList("Admin Portal", "Trainer Portal", "Gym Manager Portal", "Member Portal");
 
-        List<String> listU = new ArrayList<>();
-        listU.add("Admin Portal");
-        listU.add("Doctor Portal");
-        listU.add("Patient Portal");
-
-//        for (String data : Users.user) {
-//            listU.add(data);
-//        }
-
-        ObservableList listData = FXCollections.observableList(listU);
+        ObservableList listData = FXCollections.observableList(roleList);
         login_user.setItems(listData);
     }
 
     public void switchPage() {
-
         if (login_user.getSelectionModel().getSelectedItem() == "Admin Portal") {
-
+            cur_page_role = Role.ADMIN;
             try {
 
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("admin-portal.fxml"));
@@ -289,12 +254,30 @@ public class AdminPortal implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-        } else if (login_user.getSelectionModel().getSelectedItem() == "Doctor Portal") {
-
+        } else if (login_user.getSelectionModel().getSelectedItem() == "Trainer Portal") {
+            cur_page_role = Role.TRAINER;
             try {
 
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("trainer-portal.fxml"));
+                Stage stage = new Stage();
+
+                stage.setTitle("Gym Management System");
+
+                stage.setMinWidth(340);
+                stage.setMinHeight(580);
+
+                stage.setScene(new Scene(root));
+                stage.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else if (login_user.getSelectionModel().getSelectedItem() == "Member Portal") {
+            cur_page_role = Role.MEMBER;
+            try {
+
+                Parent root = FXMLLoader.load(GymApplication.class.getResource("member-portal.fxml"));
                 Stage stage = new Stage();
 
                 stage.setTitle("Hospital Management System");
@@ -309,11 +292,11 @@ public class AdminPortal implements Initializable {
                 e.printStackTrace();
             }
 
-        } else if (login_user.getSelectionModel().getSelectedItem() == "Patient Portal") {
-
+        } else if (login_user.getSelectionModel().getSelectedItem() == "Gym Manager Portal") {
+            cur_page_role = Role.GYMMANAGER;
             try {
 
-                Parent root = FXMLLoader.load(GymApplication.class.getResource("member-portal.fxml"));
+                Parent root = FXMLLoader.load(GymApplication.class.getResource("gym-manager-portal.fxml"));
                 Stage stage = new Stage();
 
                 stage.setTitle("Hospital Management System");
@@ -352,7 +335,8 @@ public class AdminPortal implements Initializable {
     // NOW, LETS CREATE OUR DATABASE FOR OUR USERS
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        userList();
+        cur_page_role = Role.ADMIN;
+        roleList();
     }
 
 }
