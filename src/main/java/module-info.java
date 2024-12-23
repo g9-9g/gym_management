@@ -12,6 +12,8 @@ module com.framja.gymmanagement {
 
     opens com.framja.gymmanagement to javafx.fxml;
     opens com.framja.gymmanagement.controller to javafx.fxml;
+    opens com.framja.gymmanagement.model to javafx.fxml;
+    exports com.framja.gymmanagement.model;
     exports com.framja.gymmanagement.controller;
     exports com.framja.gymmanagement;
 
