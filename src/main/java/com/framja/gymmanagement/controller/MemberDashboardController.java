@@ -5,18 +5,14 @@ import java.net.URL;
 
 import java.util.ResourceBundle;
 
+import com.framja.gymmanagement.GymApplication;
 import com.framja.gymmanagement.model.GymClass;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -28,17 +24,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
-
-import javafx.fxml.Initializable;
 
 public class MemberDashboardController implements Initializable {
 
@@ -66,7 +54,10 @@ public class MemberDashboardController implements Initializable {
     private Button dashboard_btn;
 
     @FXML
-    private Button doctors_btn;
+    private Button trainers_btn;
+
+    @FXML
+    private Button gymclasses_btn;
 
     @FXML
     private Button appointments_btn;
@@ -97,13 +88,13 @@ public class MemberDashboardController implements Initializable {
     private Circle home_doctor_circle;
 
     @FXML
-    private Label home_doctor_name;
+    private Label cur_card_name;
 
     @FXML
-    private Label home_doctor_specialization;
+    private Label cur_card_begin_date;
 
     @FXML
-    private Label home_doctor_email;
+    private Label cur_card_end_date;
 
     @FXML
     private Label home_doctor_mobileNumber;
@@ -131,10 +122,10 @@ public class MemberDashboardController implements Initializable {
 
     // Doctors form
     @FXML
-    private ScrollPane doctors_scrollPane;
+    private ScrollPane trainers_scrollPane;
 
     @FXML
-    private GridPane doctors_gridPane;
+    private GridPane trainers_gridPane;
 
     // Appointments form
     @FXML
@@ -220,7 +211,7 @@ public class MemberDashboardController implements Initializable {
     private Button profile_updateBtn;
 
     @FXML
-    private AnchorPane home_form, doctors_form, appointments_form, profile_form;
+    private AnchorPane home_form, trainers_form, appointments_form, profile_form, gymclasses_form;
 
     // Button action methods
     @FXML
@@ -298,22 +289,69 @@ public class MemberDashboardController implements Initializable {
         ptTableView.setItems(gymClasses);
     }
 
+    public void loadTrainerCard() {
+
+        // DATA
+
+//        List<Trainer> doctors = Arrays.asList(
+//                new Doctor(1L, "Dr. John Doe", "Cardiology", "john.doe@example.com"),
+//                new Doctor(2L, "Dr. Jane Smith", "Neurology", "jane.smith@example.com"),
+//                new Doctor(3L, "Dr. Emily Brown", "Dermatology", "emily.brown@example.com"),
+//                new Doctor(4L, "Dr. Michael Johnson", "Pediatrics", "michael.johnson@example.com"),
+//                new Doctor(5L, "Dr. Sarah Wilson", "Orthopedics", "sarah.wilson@example.com")
+//        );
+//
+//
+//        trainers_gridPane.getChildren().clear();
+//        trainers_gridPane.getColumnConstraints().clear();
+//        trainers_gridPane.getRowConstraints().clear();
+//
+//        int row = 0, column = 0;
+//
+//        for (int q = 0; q < doctorList.size(); q++) {
+//            try {
+//                FXMLLoader loader = new FXMLLoader();
+//                loader.setLocation(GymApplication.class.getResource("DoctorCard.fxml"));
+//                StackPane stack = loader.load();
+//
+//                DoctorCardController dController = loader.getController();
+//                dController.setData(doctorList.get(q));
+//
+//                if (column == 3) {
+//                    column = 0;
+//                    row++;
+//                }
+//
+//                trainers_gridPane.add(stack, column++, row);
+//
+//                GridPane.setMargin(stack, new Insets(15));
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+    }
+
     @FXML
     private void switchForm(ActionEvent event) {
         home_form.setVisible(false);
-        doctors_form.setVisible(false);
+        trainers_form.setVisible(false);
         appointments_form.setVisible(false);
         profile_form.setVisible(false);
+        gymclasses_form.setVisible(false);
 
         // Show the form based on the button clicked
         if (event.getSource() == dashboard_btn) {
             home_form.setVisible(true);
-        } else if (event.getSource() == doctors_btn) {
-            doctors_form.setVisible(true);
+        } else if (event.getSource() == trainers_btn) {
+            trainers_form.setVisible(true);
         } else if (event.getSource() == appointments_btn) {
             appointments_form.setVisible(true);
         } else if (event.getSource() == profile_btn) {
             profile_form.setVisible(true);
+        } else if (event.getSource() == gymclasses_btn) {
+            gymclasses_form.setVisible(true);
         }
     }
 
