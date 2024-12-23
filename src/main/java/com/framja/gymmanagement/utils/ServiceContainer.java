@@ -38,11 +38,13 @@ public class ServiceContainer {
         ClassService classService = new ClassServiceImpl();
         CourseService courseService = new CourseServiceImpl();
         PaymentService paymentService = new PaymentServiceImpl();
+        AuthService authService = new AuthServiceImpl();
         instance = new ServiceContainer();
         instance.addService(MembershipService.class, membershipService);
         instance.addService(ClassService.class, classService);
         instance.addService(UserService.class, userService);
         instance.addService(CourseService.class, courseService);
         instance.addService(PaymentService.class, paymentService);
+        instance.addService(AuthService.class, authService);
     }
 }
