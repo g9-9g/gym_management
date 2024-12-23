@@ -7,10 +7,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
+
 public class GymApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(GymApplication.class.getResource("trainer-portal.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(GymApplication.class.getResource("MemberDashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
         stage.setScene(scene);
@@ -20,6 +22,7 @@ public class GymApplication extends Application {
     }
 
     public static void main(String[] args) {
+
         launch();
     }
 }

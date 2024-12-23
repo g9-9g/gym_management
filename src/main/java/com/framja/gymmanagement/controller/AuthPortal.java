@@ -97,10 +97,10 @@ public class AuthPortal implements Initializable {
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
                     break;
                 case Role.TRAINER:
-                    root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
                     break;
                 case Role.GYMMANAGER:
-                    root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + role);
@@ -243,7 +243,7 @@ public class AuthPortal implements Initializable {
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("admin-portal.fxml"));
                 Stage stage = new Stage();
 
-                stage.setTitle("Hospital Management System");
+                stage.setTitle("Gym Management System");
 
                 stage.setMinWidth(340);
                 stage.setMinHeight(580);
@@ -280,7 +280,7 @@ public class AuthPortal implements Initializable {
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("member-portal.fxml"));
                 Stage stage = new Stage();
 
-                stage.setTitle("Hospital Management System");
+                stage.setTitle("Gym Management System");
 
                 stage.setMinWidth(340);
                 stage.setMinHeight(580);
@@ -299,7 +299,7 @@ public class AuthPortal implements Initializable {
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("gym-manager-portal.fxml"));
                 Stage stage = new Stage();
 
-                stage.setTitle("Hospital Management System");
+                stage.setTitle("Gym Management System");
 
                 stage.setMinWidth(340);
                 stage.setMinHeight(580);
@@ -331,8 +331,6 @@ public class AuthPortal implements Initializable {
 
     }
 
-    // WE'VE GOT AN ERROR BECAUSE WE DIDN'T IMPORT THE FONTAWESOME ICON JAR TO OUR LIBRARIES
-    // NOW, LETS CREATE OUR DATABASE FOR OUR USERS
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cur_page_role = Role.ADMIN;
