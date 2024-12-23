@@ -1,6 +1,7 @@
 package com.framja.gymmanagement;
 
 import com.framja.gymmanagement.constants.MemberMenuConstants;
+import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.ActionResult;
 import com.framja.gymmanagement.model.MenuOption;
@@ -24,7 +25,7 @@ public class TerminalApplication {
         System.out.println("Role: " + loggedInUser.getRole());
 
         // Check if the user is a Member
-        if (!"Member".equals(loggedInUser.getRole())) {
+        if (!RoleType.MEMBER.equals(loggedInUser.getRole())) {
             System.out.println("This application is for Members only!");
             return;
         }

@@ -1,5 +1,6 @@
 package com.framja.gymmanagement.service;
 
+import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.User;
 
@@ -13,12 +14,10 @@ public class UserServiceImpl implements UserService {
     private final List<User> users = new ArrayList<>();
 
     public UserServiceImpl() {
-        // Add default users
-        users.add(new User("john_doe", "password123", "Member"));
-        users.add(new User("jane_smith", "password456", "Trainer"));
-        users.add(new User("admin_user", "adminpass", "Admin"));
-        users.add(new User("member_user", "memberpass", "Member"));
-        users.add(new User("trainer_user", "trainerpass", "Trainer"));
+        users.add(new User("john_doe", "password123", RoleType.MEMBER, "123456789", "Male", "123 Main St"));
+        users.add(new User("jane_smith", "password456", RoleType.TRAINER, "987654321", "Female", "456 Elm St"));
+        users.add(new User("admin_user", "adminpass", RoleType.ADMIN, "1122334455", "Non-binary", "789 Pine St"));
+
     }
 
     @Override
@@ -35,11 +34,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserByUsernameAndPassword(String username, String password) {
-        return users.stream().filter(user -> (user.getUsername().equals(username) && user.getPassword().equals(password))).findFirst();
-    }
-
-    @Override
     public boolean removeUser(String username) {
         return users.removeIf(user -> user.getUsername().equals(username));
     }
@@ -52,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsersByRole(String role) {
         return users.stream()
-                .filter(user -> user.getRole().equalsIgnoreCase(role))
+                .filter(user -> user.getRole().name().equalsIgnoreCase(role))
                 .collect(Collectors.toList());
     }
 }

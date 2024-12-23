@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface UserService {
     void addUser(User user);
     Optional<User> findUserByUsername(String username);
-    Optional<User> findUserByUsernameAndPassword(String username, String password);
     boolean removeUser(String username);
     List<User> findAllUsers();
     List<User> findAllUsersByRole(String role);
