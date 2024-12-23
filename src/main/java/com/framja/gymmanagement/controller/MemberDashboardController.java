@@ -3,10 +3,15 @@ package com.framja.gymmanagement.controller;
 
 import java.net.URL;
 
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.GymApplication;
-import com.framja.gymmanagement.model.GymClass;
+import com.framja.gymmanagement.constants.MemberMenuConstants;
+import com.framja.gymmanagement.model.*;
+
+import com.framja.gymmanagement.utils.SessionManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,6 +33,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 
+
+import javafx.fxml.FXMLLoader;
+
+
+
+import java.util.List;
+
+import javafx.geometry.Insets;
+
+import javafx.scene.layout.StackPane;
+
+
+
+
 public class MemberDashboardController implements Initializable {
 
     // Top section
@@ -48,7 +67,7 @@ public class MemberDashboardController implements Initializable {
 
     // Left navigation
     @FXML
-    private Label nav_adminID;
+    private Label nav_username;
 
     @FXML
     private Button dashboard_btn;
@@ -96,8 +115,6 @@ public class MemberDashboardController implements Initializable {
     @FXML
     private Label cur_card_end_date;
 
-    @FXML
-    private Label home_doctor_mobileNumber;
 
     @FXML
     private TableView<GymClass> ptTableView;
@@ -126,6 +143,12 @@ public class MemberDashboardController implements Initializable {
 
     @FXML
     private GridPane trainers_gridPane;
+
+    @FXML
+    private ScrollPane courses_scrollPane;
+
+    @FXML
+    private GridPane courses_gridPane;
 
     // Appointments form
     @FXML
@@ -219,6 +242,8 @@ public class MemberDashboardController implements Initializable {
         System.out.println("Logout button clicked");
     }
 
+
+
     private <T> void centerAlignColumnContent(TableColumn<GymClass, T> column) {
         column.setCellFactory(tc -> {
             TableCell<GymClass, T> cell = new TableCell<>() {
@@ -239,83 +264,89 @@ public class MemberDashboardController implements Initializable {
         });
     }
 
+    private void loadUserInfo() {
+        int actionId = MemberMenuConstants.VIEW_PROFILE;
+        ActionResult<User> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        if (result.isSuccess()) {
+            System.out.println(result.getData()); // Error
+//            nav_username.setText(result.getData().getUsername());
+//            top_username.setText(result.getData().getUsername());
+        } else {
+            System.out.println("Error loading User Information");
+        }
+
+    }
+
     private void loadGymClass() {
-        // Sample data
-        ObservableList<GymClass> gymClasses = FXCollections.observableArrayList();
-        GymClass gymClass1 = new GymClass(1L, "Yoga Basics", "08:00 AM", "09:00 AM", "Monday, Wednesday, Friday", 101, 20);
-        GymClass gymClass2 = new GymClass(2L, "Strength Training", "10:00 AM", "11:00 AM", "Tuesday, Thursday", 102, 15);
-        GymClass gymClass3 = new GymClass(3L, "Cardio Blast", "05:00 PM", "06:00 PM", "Monday to Friday", 103, 25);
-        GymClass gymClass4 = new GymClass(4L, "Pilates", "07:00 AM", "08:00 AM", "Saturday, Sunday", 104, 10);
-        GymClass gymClass5 = new GymClass(5L, "Zumba Dance", "06:00 PM", "07:00 PM", "Wednesday, Friday", 105, 30);
 
-        gymClasses.addAll(gymClass1, gymClass2, gymClass3, gymClass4, gymClass5);
+        int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
+        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
 
-        gymClassColDescription.setCellValueFactory(new PropertyValueFactory<>("name")); // Assuming ID is appointment ID
-        gymClassColCourse.setCellValueFactory(new PropertyValueFactory<>("name"));
-        gymClassColTrainer.setCellValueFactory(new PropertyValueFactory<>("trainerId"));
-        gymClassColSchedule.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        System.out.println(result);
 
-        centerAlignColumnContent(gymClassColDescription);
-        centerAlignColumnContent(gymClassColCourse);
-        centerAlignColumnContent(gymClassColTrainer);
-        centerAlignColumnContent(gymClassColSchedule);
-        centerAlignColumnContent(gymClassColTime);
+        if (result.isSuccess()) {
+            System.out.println("Result: " + result.getData());
+            gymClassColDescription.setCellValueFactory(new PropertyValueFactory<>("id"));
+            gymClassColCourse.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+            gymClassColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
+            gymClassColSchedule.setCellValueFactory(new PropertyValueFactory<>("schedule"));
 
-        // Set items in the table
-        gymClassTableView.setItems(gymClasses);
+            centerAlignColumnContent(gymClassColDescription);
+            centerAlignColumnContent(gymClassColCourse);
+            centerAlignColumnContent(gymClassColTrainer);
+            centerAlignColumnContent(gymClassColSchedule);
+            centerAlignColumnContent(gymClassColTime);
+
+            gymClassTableView.setItems(FXCollections.observableArrayList(result.getData()));
+        } else {
+            System.out.println("Error: " + result.getMessage());
+        }
+
+
     }
 
     private void loadPT() {
-        ObservableList<GymClass> gymClasses = FXCollections.observableArrayList();
-        GymClass gymClass1 = new GymClass(1L, "Yoga Basics", "08:00 AM", "09:00 AM", "Monday, Wednesday, Friday", 101, 20);
-        GymClass gymClass2 = new GymClass(2L, "Strength Training", "10:00 AM", "11:00 AM", "Tuesday, Thursday", 102, 15);
-        GymClass gymClass3 = new GymClass(3L, "Cardio Blast", "05:00 PM", "06:00 PM", "Monday to Friday", 103, 25);
-        GymClass gymClass4 = new GymClass(4L, "Pilates", "07:00 AM", "08:00 AM", "Saturday, Sunday", 104, 10);
-        GymClass gymClass5 = new GymClass(5L, "Zumba Dance", "06:00 PM", "07:00 PM", "Wednesday, Friday", 105, 30);
+        int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
+        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
 
-        gymClasses.addAll(gymClass1, gymClass2, gymClass3, gymClass4, gymClass5);
+        if (result.isSuccess()) {
+            ptColDescription.setCellValueFactory(new PropertyValueFactory<>("id")); // Assuming ID is appointment ID
+            ptColDay.setCellValueFactory(new PropertyValueFactory<>("schedule"));
+            ptColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
+            ptColTime.setCellValueFactory(new PropertyValueFactory<>("schedule"));
 
-        ptColDescription.setCellValueFactory(new PropertyValueFactory<>("name")); // Assuming ID is appointment ID
-        ptColDay.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        ptColTrainer.setCellValueFactory(new PropertyValueFactory<>("trainerId"));
-        ptColTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+            centerAlignColumnContent(ptColDescription);
+            centerAlignColumnContent(ptColDay);
+            centerAlignColumnContent(ptColTrainer);
+            centerAlignColumnContent(ptColTime);
 
-        centerAlignColumnContent(ptColDescription);
-        centerAlignColumnContent(ptColDay);
-        centerAlignColumnContent(ptColTrainer);
-        centerAlignColumnContent(ptColTime);
-
-        // Set items in the table
-        ptTableView.setItems(gymClasses);
+            // Set items in the table
+            ptTableView.setItems(FXCollections.observableArrayList(result.getData()));
+        } else {
+            System.out.println("Error: " + result.getMessage());
+        }
     }
 
     public void loadTrainerCard() {
 
         // DATA
 
-//        List<Trainer> doctors = Arrays.asList(
-//                new Doctor(1L, "Dr. John Doe", "Cardiology", "john.doe@example.com"),
-//                new Doctor(2L, "Dr. Jane Smith", "Neurology", "jane.smith@example.com"),
-//                new Doctor(3L, "Dr. Emily Brown", "Dermatology", "emily.brown@example.com"),
-//                new Doctor(4L, "Dr. Michael Johnson", "Pediatrics", "michael.johnson@example.com"),
-//                new Doctor(5L, "Dr. Sarah Wilson", "Orthopedics", "sarah.wilson@example.com")
-//        );
-//
-//
+
+
 //        trainers_gridPane.getChildren().clear();
 //        trainers_gridPane.getColumnConstraints().clear();
 //        trainers_gridPane.getRowConstraints().clear();
 //
 //        int row = 0, column = 0;
 //
-//        for (int q = 0; q < doctorList.size(); q++) {
+//        for (int q = 0; q < trainers.size(); q++) {
 //            try {
 //                FXMLLoader loader = new FXMLLoader();
-//                loader.setLocation(GymApplication.class.getResource("DoctorCard.fxml"));
+//                loader.setLocation(GymApplication.class.getResource("TrainerCard.fxml"));
 //                StackPane stack = loader.load();
 //
-//                DoctorCardController dController = loader.getController();
-//                dController.setData(doctorList.get(q));
+//                TrainerCardController dController = loader.getController();
+//                dController.setData(trainers.get(q));
 //
 //                if (column == 3) {
 //                    column = 0;
@@ -331,6 +362,56 @@ public class MemberDashboardController implements Initializable {
 //            }
 //        }
 
+    }
+
+    public void loadCourseCard () {
+        int actionId = MemberMenuConstants.VIEW_ALL_COURSES;
+        ActionResult<List<Course>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+
+
+        courses_gridPane.getChildren().clear();
+        courses_gridPane.getColumnConstraints().clear();
+        courses_gridPane.getRowConstraints().clear();
+
+        int row = 0, column = 0;
+
+        for (int q = 0; q < result.getData().size(); q++) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(GymApplication.class.getResource("CourseCard.fxml"));
+                StackPane stack = loader.load();
+
+                CourseCardController dController = loader.getController();
+                dController.setData(result.getData().get(q));
+
+                if (column == 3) {
+                    column = 0;
+                    row++;
+                }
+
+                courses_gridPane.add(stack, column++, row);
+
+                GridPane.setMargin(stack, new Insets(15));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadMembershipCard() {
+        int actionId = MemberMenuConstants.VIEW_MEMBERSHIP;
+        ActionResult<MembershipCard> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        if (result.isSuccess()) {
+            MembershipCard membershipCard = result.getData();
+            Platform.runLater(() -> {
+                cur_card_name.setText(membershipCard.getType().getName());
+                cur_card_begin_date.setText(membershipCard.getStartDate().toString());
+                cur_card_end_date.setText(membershipCard.getEndDate().toString());
+            });
+        } else {
+            System.out.println("Error: " + result.getMessage());
+        }
     }
 
     @FXML
@@ -382,7 +463,11 @@ public class MemberDashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loadUserInfo();
         loadGymClass();
         loadPT();
+        loadTrainerCard();
+        loadCourseCard();
+        loadMembershipCard();
     }
 }

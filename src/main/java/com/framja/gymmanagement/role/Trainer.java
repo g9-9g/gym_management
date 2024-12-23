@@ -14,6 +14,7 @@ public class Trainer extends BaseRole {
         super(self);
     }
 
+
     @Override
     protected List<MenuOption<?>> defineMenuOptions() {
         TrainerCommandFactory factory = new TrainerCommandFactory(self);

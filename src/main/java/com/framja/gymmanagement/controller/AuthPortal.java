@@ -5,8 +5,16 @@ import java.net.URL;
 import java.util.*;
 
 import com.framja.gymmanagement.GymApplication;
+import com.framja.gymmanagement.constants.RoleType;
+import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.*;
-import com.framja.gymmanagement.service.AuthService;
+import com.framja.gymmanagement.interfaces.AuthService;
+import com.framja.gymmanagement.role.Admin;
+import com.framja.gymmanagement.role.Member;
+import com.framja.gymmanagement.role.Trainer;
+import com.framja.gymmanagement.utils.ServiceContainer;
+import com.framja.gymmanagement.utils.SessionManager;
+import eu.hansolo.tilesfx.addons.Switch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +35,7 @@ import javafx.stage.Stage;
 
 
 public class AuthPortal implements Initializable {
-    
+
     @FXML
     private AnchorPane main_form;
 
@@ -82,28 +90,33 @@ public class AuthPortal implements Initializable {
     @FXML
     private ImageView register_loginImage;
 
-    private Role cur_page_role = Role.ADMIN;
+    private RoleType cur_page_role = RoleType.ADMIN;
 
     private AlertPrompt alert = new AlertPrompt();
 
-    private void redirectToDashboard(Role role) {
+    private final AuthService authService = ServiceContainer.getInstance().getService(AuthService.class);
+
+    private void redirectToDashboard(User current_user) {
         try {
             Parent root;
-            switch (role) {
-                case Role.ADMIN:
-                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
+            switch (current_user.getRole()) {
+                case RoleType.ADMIN:
+                    Admin admin = new Admin(current_user);
+                    SessionManager.getInstance().setCurrentRole(admin);
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("AdminDashboard.fxml")));
                     break;
-                case Role.MEMBER:
-                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
+                case RoleType.MEMBER:
+                    Member member = new Member(current_user);
+                    SessionManager.getInstance().setCurrentRole(member);
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("MemberDashboard.fxml")));
                     break;
-                case Role.TRAINER:
-                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
-                    break;
-                case Role.GYMMANAGER:
-                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("hello-view.fxml")));
+                case RoleType.TRAINER:
+                    Trainer trainer = new Trainer(current_user);
+                    SessionManager.getInstance().setCurrentRole(trainer);
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("TrainerDashboard.fxml")));
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + role);
+                    throw new IllegalStateException("Unexpected value: " + current_user.getRole());
             }
             Stage stage = new Stage();
             stage.setTitle("Gym Management System | " + cur_page_role.toString() + "Portal");
@@ -129,16 +142,18 @@ public class AuthPortal implements Initializable {
                         login_password.setText(login_showPassword.getText());
                     }
                 }
-                User cur = AuthService.login(login_username.getText(), login_password.getText());
-                if (cur != null && cur.getRole() == cur_page_role) {
+                System.out.println(login_password.getText());
+                User cur = authService.login(login_username.getText(), login_password.getText());
+                System.out.println(cur.getRole());
 
+                if (cur == null || cur.getRole() != cur_page_role) {
+                    alert.errorMessage("Incorrect Username/Password");
+
+                } else {
                     alert.successMessage("Login Successfully!");
 
-                    redirectToDashboard(cur_page_role);
-
+                     redirectToDashboard(cur);
                     login_loginBtn.getScene().getWindow().hide();
-                } else {
-                    alert.errorMessage("Incorrect Username/Password");
                 }
 
             } catch (Exception e) {
@@ -179,22 +194,7 @@ public class AuthPortal implements Initializable {
                 if (register_password.getText().length() < 8) {
                     alert.errorMessage("Invalid Password, at least 8 characters needed");
                 } else {
-                    User new_u;
-                    if (cur_page_role == Role.ADMIN) {
-                        new_u = new Admin(register_username.getText(), "", register_password.getText());
-                        AuthService.register(new_u);
-                    } else if (cur_page_role == Role.TRAINER) {
-                        new_u = new Trainer(register_username.getText(), "", register_password.getText());
-                        AuthService.register(new_u);
-                    } else if (cur_page_role == Role.GYMMANAGER) {
-                        new_u = new GymManager(register_username.getText(), "", register_password.getText());
-                        AuthService.register(new_u);
-                    } else if (cur_page_role == Role.MEMBER) {
-                        new_u = new Member(register_username.getText(), "", register_password.getText());
-                        AuthService.register(new_u);
-                    } else {
-                        throw new IllegalStateException("Unexpected value: " + cur_page_role);
-                    }
+                    authService.register(register_username.getText(), register_password.getText(), cur_page_role);
 
                     alert.successMessage("Registered Successfully!");
                     registerClear();
@@ -237,7 +237,7 @@ public class AuthPortal implements Initializable {
 
     public void switchPage() {
         if (login_user.getSelectionModel().getSelectedItem() == "Admin Portal") {
-            cur_page_role = Role.ADMIN;
+            cur_page_role = RoleType.ADMIN;
             try {
 
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("admin-portal.fxml"));
@@ -255,7 +255,7 @@ public class AuthPortal implements Initializable {
                 e.printStackTrace();
             }
         } else if (login_user.getSelectionModel().getSelectedItem() == "Trainer Portal") {
-            cur_page_role = Role.TRAINER;
+            cur_page_role = RoleType.TRAINER;
             try {
 
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("trainer-portal.fxml"));
@@ -274,29 +274,10 @@ public class AuthPortal implements Initializable {
             }
 
         } else if (login_user.getSelectionModel().getSelectedItem() == "Member Portal") {
-            cur_page_role = Role.MEMBER;
+            cur_page_role = RoleType.MEMBER;
             try {
 
                 Parent root = FXMLLoader.load(GymApplication.class.getResource("member-portal.fxml"));
-                Stage stage = new Stage();
-
-                stage.setTitle("Gym Management System");
-
-                stage.setMinWidth(340);
-                stage.setMinHeight(580);
-
-                stage.setScene(new Scene(root));
-                stage.show();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else if (login_user.getSelectionModel().getSelectedItem() == "Gym Manager Portal") {
-            cur_page_role = Role.GYMMANAGER;
-            try {
-
-                Parent root = FXMLLoader.load(GymApplication.class.getResource("gym-manager-portal.fxml"));
                 Stage stage = new Stage();
 
                 stage.setTitle("Gym Management System");
@@ -333,7 +314,22 @@ public class AuthPortal implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cur_page_role = Role.ADMIN;
+        System.out.println("Initializing with URL: " + url.toString());
+
+        if (url != null) {
+            String urlPath = url.getPath();
+            if (urlPath.contains("admin-portal")) {
+                cur_page_role = RoleType.ADMIN;
+            } else if (urlPath.contains("member-portal")) {
+                cur_page_role = RoleType.MEMBER;
+            } else if (urlPath.contains("trainer-portal")) {
+                cur_page_role = RoleType.TRAINER;
+            } else {
+                cur_page_role = RoleType.ADMIN;
+            }
+        }
+
+        System.out.println("Current Page Role: " + cur_page_role);
         roleList();
     }
 

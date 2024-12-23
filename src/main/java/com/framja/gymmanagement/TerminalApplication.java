@@ -4,11 +4,14 @@ import com.framja.gymmanagement.constants.MemberMenuConstants;
 import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.ActionResult;
+import com.framja.gymmanagement.model.Course;
 import com.framja.gymmanagement.model.MenuOption;
 import com.framja.gymmanagement.model.User;
 import com.framja.gymmanagement.role.Member;
 import com.framja.gymmanagement.utils.ServiceContainer;
 import com.framja.gymmanagement.utils.SessionManager;
+
+import java.util.List;
 
 public class TerminalApplication {
     public static void main(String[] args) {
@@ -45,7 +48,7 @@ public class TerminalApplication {
         int actionId = MemberMenuConstants.VIEW_ALL_COURSES;
 
         // Execute the selected option using SessionManager
-        ActionResult<?> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<?> result = member.performAction(actionId);
 
         // Display the result
         if (result.isSuccess()) {

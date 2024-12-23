@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
     private final List<User> users = new ArrayList<>();
 
     public UserServiceImpl() {
-        users.add(new User("john_doe", "password123", RoleType.MEMBER, "123456789", "Male", "123 Main St"));
+        users.add(new User("abc", "123", RoleType.MEMBER, "123456789", "Male", "123 Main St"));
         users.add(new User("jane_smith", "password456", RoleType.TRAINER, "987654321", "Female", "456 Elm St"));
         users.add(new User("admin_user", "adminpass", RoleType.ADMIN, "1122334455", "Non-binary", "789 Pine St"));
 

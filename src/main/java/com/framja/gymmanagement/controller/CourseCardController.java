@@ -1,10 +1,10 @@
 package com.framja.gymmanagement.controller;
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.framja.gymmanagement.role.Trainer;
-
+import com.framja.gymmanagement.model.Course;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -15,36 +15,39 @@ import javafx.scene.shape.Circle;
  *
  * @author WINDOWS 10
  */
-public class TrainerCardController implements Initializable {
+public class CourseCardController implements Initializable {
 
     @FXML
-    private Circle trainer_circle;
+    private Circle course_circle;
 
     @FXML
-    private Label trainer_id;
+    private Label course_id;
 
     @FXML
-    private Label trainer_name;
+    private Label course_name;
 
     @FXML
-    private Label trainer_email;
+    private Label course_number_class;
 
     @FXML
-    private Label trainer_specialization;
+    private Label course_start_time;
 
+    @FXML
+    private Label course_end_time;
 
     private Image image;
 
-    public void setData(Trainer data) {
+    public void setData(Course data) {
 //        if (data.getImage() != null) {
 //            image = new Image("File:" + data.getImage(), 52, 52, false, true);
 //            trainer_circle.setFill(new ImagePattern(image));
 //        }
-
-//        trainer_id.setText(data.getId());
-//        trainer_name.setText(data.getName());
-//        trainer_specialization.setText(data.getSpecialization());
-//        trainer_email.setText(data.getEmail());
+//
+        course_id.setText(data.getName());
+        course_name.setText(data.getDescription());
+        course_number_class.setText(String.valueOf(data.getMaxMembers()));
+        course_start_time.setText(data.getStartDate());
+        course_end_time.setText(data.getEndDate());
     }
 
     @Override

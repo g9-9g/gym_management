@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" stylesheets="@style/Dashboard/dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.framja.gymmanagement.controller.CourseCardController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <HBox prefHeight="25.0" prefWidth="300.0">
+                    <children>
+                        <Label prefHeight="21.0" prefWidth="160.0" text="Course name:">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="course_id" prefHeight="21.0" prefWidth="206.0" text="Label">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="144.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
+                    <children>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="143.0" text="Description:">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="course_name" prefHeight="21.0" prefWidth="169.0" text="Label">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="20.0" layoutY="144.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </VBox.margin>
+               <children>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="164.0" text="Available Classes:">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="course_number_class" prefHeight="21.0" prefWidth="116.0" text="Label">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+               </children>
+                </HBox>
+            <HBox layoutX="20.0" layoutY="70.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
+               <children>
+                  <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="164.0" text="startDate:">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="course_start_time" prefHeight="21.0" prefWidth="116.0" text="Label">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="95.0" prefHeight="25.0" prefWidth="300.0">
+               <children>
+                  <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="164.0" text="endDate:">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="course_end_time" prefHeight="21.0" prefWidth="116.0" text="Label">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            </children>
+        </VBox>
+    </children>
+    <styleClass>
+        <String fx:value="white-bg" />
+        <String fx:value="radius" />
+        <String fx:value="shadow" />
+    </styleClass>
+</StackPane>

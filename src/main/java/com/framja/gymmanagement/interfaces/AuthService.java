@@ -1,5 +1,6 @@
 package com.framja.gymmanagement.interfaces;
 
+import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.model.User;
 
 public interface AuthService {
@@ -20,5 +21,5 @@ public interface AuthService {
      * @param role Vai trò của người dùng (e.g., MEMBER, TRAINER, ADMIN).
      * @return User đã được tạo, null nếu thất bại (username đã tồn tại).
      */
-    User register(String username, String password, String role);
+    User register(String username, String password, RoleType role);
 }

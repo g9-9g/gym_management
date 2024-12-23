@@ -38,7 +38,7 @@ public class ServiceContainer {
         ClassService classService = new ClassServiceImpl();
         CourseService courseService = new CourseServiceImpl();
         PaymentService paymentService = new PaymentServiceImpl();
-        AuthService authService = new AuthServiceImpl();
+        AuthService authService = new AuthServiceImpl(userService);
         instance = new ServiceContainer();
         instance.addService(MembershipService.class, membershipService);
         instance.addService(ClassService.class, classService);

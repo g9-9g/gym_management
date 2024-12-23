@@ -11,8 +11,8 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
     private final UserService userService;
 
-    public AuthServiceImpl() {
-        this.userService = ServiceContainer.getInstance().getService(UserService.class);
+    public AuthServiceImpl(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -26,20 +26,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User register(String username, String password, String role) {
+    public User register(String username, String password, RoleType role) {
         if (userService.findUserByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Error: Username already exists.");
         }
 
-        RoleType roleType;
-        try {
-            roleType = RoleType.valueOf(role.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: Invalid role type.");
-            return null;
-        }
-
-        User newUser = new User(username, password, roleType);
+        User newUser = new User(username, password, role);
         userService.addUser(newUser);
         return newUser;
     }
