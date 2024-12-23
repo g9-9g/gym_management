@@ -1,43 +1,50 @@
 package com.framja.gymmanagement.model;
 
+import com.framja.gymmanagement.constants.MembershipCardType;
+
+import java.time.LocalDate;
+import java.util.List;
+
 public class MembershipCard {
-    private long id; // Membership card ID
+    private final MembershipCardType type; // Loại membership
+    private final LocalDate startDate; // Ngày bắt đầu
+    private final LocalDate endDate; // Ngày kết thúc
+    private final List<String> permissions; // Các tài nguyên được phép truy cập
 
-    private String plan; // Plan type (e.g., Basic, Premium)
-    private int durationInMonths; // Duration of the membership (e.g., 6 months)
-    private double price; // Cost of the membership
-
-    // Constructor
-    public MembershipCard(Long id, String plan, int durationInMonths) {
-        this.id = id;
-        this.plan = plan;
-        this.durationInMonths = durationInMonths;
+    public MembershipCard(MembershipCardType type, LocalDate startDate, LocalDate endDate, List<String> permissions) {
+        this.type = type;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.permissions = permissions;
     }
 
-    public long getId() {
-        return id;
-    }
-    public String getPlan() {
-        return plan;
+    public MembershipCardType getType() {
+        return type;
     }
 
-    public void setPlan(String plan) {
-        this.plan = plan;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public int getDurationInMonths() {
-        return durationInMonths;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setDurationInMonths(int durationInMonths) {
-        this.durationInMonths = durationInMonths;
+    public List<String> getPermissions() {
+        return permissions;
     }
 
-    public double getPrice() {
-        return price;
+    public boolean isActive() {
+        return LocalDate.now().isBefore(endDate);
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    @Override
+    public String toString() {
+        return "MembershipCard{" +
+                "type=" + type +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", permissions=" + permissions +
+                '}';
     }
 }
