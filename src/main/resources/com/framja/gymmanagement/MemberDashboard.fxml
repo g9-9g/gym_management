@@ -122,11 +122,11 @@
                                                 </Label>
                                                 <TableView fx:id="gymClassTableView" layoutX="13.0" layoutY="51.0" prefHeight="200.0" prefWidth="517.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="51.0">
                                                     <columns>
-                                                        <TableColumn fx:id="gymClassColDescription" prefWidth="75.0" text="Description" />
-                                                        <TableColumn fx:id="gymClassColCourse" prefWidth="114.0" text="Course" />
+                                                        <TableColumn fx:id="gymClassColCourse" prefWidth="20" text="Course" />
+                                                        <TableColumn fx:id="gymClassColDescription" prefWidth="200.0" text="Description" />
                                                         <TableColumn fx:id="gymClassColTrainer" prefWidth="92.0" text="Trainer" />
                                                         <TableColumn fx:id="gymClassColSchedule" prefWidth="119.0" text="Schedule" />
-                                                        <TableColumn fx:id="gymClassColTime" prefWidth="119.0" text="Time" />
+<!--                                                        <TableColumn fx:id="gymClassColTime" prefWidth="119.0" text="Time" />-->
                                                     </columns>
                                                     <columnResizePolicy>
                                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

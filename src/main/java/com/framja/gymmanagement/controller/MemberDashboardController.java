@@ -7,10 +7,17 @@ import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.GymApplication;
 import com.framja.gymmanagement.constants.MemberMenuConstants;
+import com.framja.gymmanagement.interfaces.ClassService;
+import com.framja.gymmanagement.interfaces.CourseService;
+import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.*;
 
+import com.framja.gymmanagement.role.Trainer;
+import com.framja.gymmanagement.service.CourseServiceImpl;
+import com.framja.gymmanagement.utils.ServiceContainer;
 import com.framja.gymmanagement.utils.SessionManager;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -93,13 +100,11 @@ public class MemberDashboardController implements Initializable {
     private TableColumn<GymClass, String> gymClassColCourse;
 
     @FXML
-    private TableColumn<GymClass, Long> gymClassColTrainer;
+    private TableColumn<GymClass, String> gymClassColTrainer;
 
     @FXML
     private TableColumn<GymClass, String> gymClassColSchedule;
 
-    @FXML
-    private TableColumn<GymClass, String> gymClassColTime;
 
     @FXML
     private Circle home_doctor_circle;
@@ -240,7 +245,10 @@ public class MemberDashboardController implements Initializable {
         System.out.println("Logout button clicked");
     }
 
-
+    // Implements
+    private UserService userService;
+    private CourseService courseService;
+    private ClassService classService;
 
     private <T> void centerAlignColumnContent(TableColumn<GymClass, T> column) {
         column.setCellFactory(tc -> {
@@ -276,24 +284,43 @@ public class MemberDashboardController implements Initializable {
     }
 
     private void loadGymClass() {
+//        gymClassTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
         ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
+
+
 
         System.out.println(result);
 
         if (result.isSuccess()) {
             System.out.println("Result: " + result.getData());
-            gymClassColDescription.setCellValueFactory(new PropertyValueFactory<>("id"));
+//            gymClassColDescription.setCellValueFactory(new PropertyValueFactory<>("id"));
             gymClassColCourse.setCellValueFactory(new PropertyValueFactory<>("courseId"));
             gymClassColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
             gymClassColSchedule.setCellValueFactory(new PropertyValueFactory<>("schedule"));
+
+            System.out.println(courseService.getAllCourses());
+
+            gymClassColDescription.setCellValueFactory(cellData -> {
+                Course cur_course = courseService.getCourseById(cellData.getValue().getCourseId());
+                return new SimpleStringProperty(cur_course != null ? cur_course.getDescription() : "");
+            });
+
+            gymClassColTrainer.setCellValueFactory(cellData -> {
+                User instructor = cellData.getValue().getInstructor();
+                return new SimpleStringProperty(instructor != null ? instructor.getUsername() : "");
+            });
 
             centerAlignColumnContent(gymClassColDescription);
             centerAlignColumnContent(gymClassColCourse);
             centerAlignColumnContent(gymClassColTrainer);
             centerAlignColumnContent(gymClassColSchedule);
-            centerAlignColumnContent(gymClassColTime);
+
+            gymClassColCourse.prefWidthProperty().bind(gymClassTableView.widthProperty().multiply(0.2)); // 20%
+            gymClassColDescription.prefWidthProperty().bind(gymClassTableView.widthProperty().multiply(0.4)); // 40%
+            gymClassColTrainer.prefWidthProperty().bind(gymClassTableView.widthProperty().multiply(0.2)); // 20%
+            gymClassColSchedule.prefWidthProperty().bind(gymClassTableView.widthProperty().multiply(0.2));
 
             gymClassTableView.setItems(FXCollections.observableArrayList(result.getData()));
         } else {
@@ -310,8 +337,13 @@ public class MemberDashboardController implements Initializable {
         if (result.isSuccess()) {
             ptColDescription.setCellValueFactory(new PropertyValueFactory<>("id")); // Assuming ID is appointment ID
             ptColDay.setCellValueFactory(new PropertyValueFactory<>("schedule"));
-            ptColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
+//            ptColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
             ptColTime.setCellValueFactory(new PropertyValueFactory<>("schedule"));
+
+            ptColTrainer.setCellValueFactory(cellData -> {
+                User instructor = cellData.getValue().getInstructor();
+                return new SimpleStringProperty(instructor != null ? instructor.getUsername() : "");
+            });
 
             centerAlignColumnContent(ptColDescription);
             centerAlignColumnContent(ptColDay);
@@ -326,39 +358,43 @@ public class MemberDashboardController implements Initializable {
     }
 
     public void loadTrainerCard() {
+        int actionId = MemberMenuConstants.VIEW_TRAINER_LIST;
+        ActionResult<List<Trainer>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
-        // DATA
+        if (result.isSuccess()) {
+            List<Trainer> trainers = result.getData();
+            trainers_gridPane.getChildren().clear();
+            trainers_gridPane.getColumnConstraints().clear();
+            trainers_gridPane.getRowConstraints().clear();
 
+            int row = 0, column = 0;
 
+            for (int q = 0; q < trainers.size(); q++) {
+                try {
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(GymApplication.class.getResource("TrainerCard.fxml"));
+                    StackPane stack = loader.load();
 
-//        trainers_gridPane.getChildren().clear();
-//        trainers_gridPane.getColumnConstraints().clear();
-//        trainers_gridPane.getRowConstraints().clear();
-//
-//        int row = 0, column = 0;
-//
-//        for (int q = 0; q < trainers.size(); q++) {
-//            try {
-//                FXMLLoader loader = new FXMLLoader();
-//                loader.setLocation(GymApplication.class.getResource("TrainerCard.fxml"));
-//                StackPane stack = loader.load();
-//
-//                TrainerCardController dController = loader.getController();
-//                dController.setData(trainers.get(q));
-//
-//                if (column == 3) {
-//                    column = 0;
-//                    row++;
-//                }
-//
-//                trainers_gridPane.add(stack, column++, row);
-//
-//                GridPane.setMargin(stack, new Insets(15));
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+                    TrainerCardController dController = loader.getController();
+                    dController.setData(trainers.get(q));
+
+                    if (column == 3) {
+                        column = 0;
+                        row++;
+                    }
+
+                    trainers_gridPane.add(stack, column++, row);
+
+                    GridPane.setMargin(stack, new Insets(15));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            System.out.println("Error: " + result.getMessage());
+        }
+
 
     }
 
@@ -366,35 +402,46 @@ public class MemberDashboardController implements Initializable {
         int actionId = MemberMenuConstants.VIEW_ALL_COURSES;
         ActionResult<List<Course>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
+        if (result.isSuccess()) {
+            courses_gridPane.getChildren().clear();
+            courses_gridPane.getColumnConstraints().clear();
+            courses_gridPane.getRowConstraints().clear();
 
-        courses_gridPane.getChildren().clear();
-        courses_gridPane.getColumnConstraints().clear();
-        courses_gridPane.getRowConstraints().clear();
+            int row = 0, column = 0;
 
-        int row = 0, column = 0;
+            List <Course> courses = result.getData();
 
-        for (int q = 0; q < result.getData().size(); q++) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(GymApplication.class.getResource("CourseCard.fxml"));
-                StackPane stack = loader.load();
+            for (int q = 0; q < courses.size(); q++) {
+                try {
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(GymApplication.class.getResource("CourseCard.fxml"));
+                    StackPane stack = loader.load();
 
-                CourseCardController dController = loader.getController();
-                dController.setData(result.getData().get(q));
+                    // Load classes -> course
+                    List <GymClass> classes = classService.getClassesByCourseId(courses.get(q).getId());
 
-                if (column == 3) {
-                    column = 0;
-                    row++;
+                    CourseCardController dController = loader.getController();
+
+
+                    dController.setData(courses.get(q), classes);
+
+                    if (column == 3) {
+                        column = 0;
+                        row++;
+                    }
+
+                    courses_gridPane.add(stack, column++, row);
+
+                    GridPane.setMargin(stack, new Insets(15));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                courses_gridPane.add(stack, column++, row);
-
-                GridPane.setMargin(stack, new Insets(15));
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } else {
+            System.out.println("Error: " + result.getMessage());
         }
+
     }
 
     public void loadMembershipCard() {
@@ -461,6 +508,11 @@ public class MemberDashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        userService = ServiceContainer.getInstance().getService(UserService.class);
+        courseService = ServiceContainer.getInstance().getService(CourseService.class);
+        classService = ServiceContainer.getInstance().getService(ClassService.class);
+
         loadUserInfo();
         loadGymClass();
         loadPT();

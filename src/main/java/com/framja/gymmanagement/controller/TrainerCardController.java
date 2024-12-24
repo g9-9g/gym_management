@@ -21,13 +21,13 @@ public class TrainerCardController implements Initializable {
     private Circle trainer_circle;
 
     @FXML
-    private Label trainer_id;
+    private Label trainer_phone_number;
 
     @FXML
     private Label trainer_name;
 
     @FXML
-    private Label trainer_email;
+    private Label trainer_address;
 
     @FXML
     private Label trainer_specialization;
@@ -41,11 +41,12 @@ public class TrainerCardController implements Initializable {
 //            trainer_circle.setFill(new ImagePattern(image));
 //        }
 
-//        trainer_id.setText(data.getId());
-//        trainer_name.setText(data.getName());
-//        trainer_specialization.setText(data.getSpecialization());
-//        trainer_email.setText(data.getEmail());
+        trainer_name.setText(data.getUsername());
+        trainer_specialization.setText(data.getSpecialization());
+        trainer_phone_number.setText(data.getPhoneNumber());
+        trainer_address.setText(data.getAddress());
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

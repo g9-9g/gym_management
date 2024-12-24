@@ -97,19 +97,15 @@ public class AuthPortal implements Initializable {
     private void redirectToDashboard(User current_user) {
         try {
             Parent root;
+            SessionManager.getInstance().setCurrentUser(current_user);
             switch (current_user.getRole()) {
                 case ADMIN:
-                    SessionManager.getInstance().setCurrentUser((Admin) current_user);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("AdminDashboard.fxml")));
                     break;
                 case MEMBER:
-                    Member member = (Member) current_user;
-                    SessionManager.getInstance().setCurrentUser(member);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("MemberDashboard.fxml")));
                     break;
                 case TRAINER:
-                    Trainer trainer = (Trainer) current_user;
-                    SessionManager.getInstance().setCurrentUser(trainer);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("TrainerDashboard.fxml")));
                     break;
                 default:
@@ -141,7 +137,7 @@ public class AuthPortal implements Initializable {
                 }
                 System.out.println(login_password.getText());
                 User cur = authService.login(login_username.getText(), login_password.getText());
-                System.out.println(cur.getRole());
+//                System.out.println(cur.getRole());
 
                 if (cur == null || cur.getRole() != cur_page_role) {
                     alert.errorMessage("Incorrect Username/Password");
@@ -226,7 +222,7 @@ public class AuthPortal implements Initializable {
     }
 
     public void roleList() {
-        List<String> roleList = Arrays.asList("Admin Portal", "Trainer Portal", "Gym Manager Portal", "Member Portal");
+        List<String> roleList = Arrays.asList("Admin Portal", "Trainer Portal", "Member Portal");
 
         ObservableList listData = FXCollections.observableList(roleList);
         login_user.setItems(listData);

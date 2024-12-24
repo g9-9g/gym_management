@@ -30,6 +30,13 @@ public class Trainer extends User {
         this.salary = salary;
     }
 
+    public String getSpecialization() {
+        return specialization;
+    }
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
     @Override
     public String toString() {
         return super.toString() + ", salary=" + salary;
