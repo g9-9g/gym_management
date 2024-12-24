@@ -3,12 +3,14 @@ package com.framja.gymmanagement.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.framja.gymmanagement.GymApplication;
 import com.framja.gymmanagement.role.Trainer;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 /**
@@ -36,10 +38,12 @@ public class TrainerCardController implements Initializable {
     private Image image;
 
     public void setData(Trainer data) {
-//        if (data.getImage() != null) {
-//            image = new Image("File:" + data.getImage(), 52, 52, false, true);
-//            trainer_circle.setFill(new ImagePattern(image));
-//        }
+        if (data.getImageUrl() != null) {
+            Image image = new Image(GymApplication.class.getResource(data.getImageUrl()).toExternalForm());
+            trainer_circle.setFill(new ImagePattern(image));
+
+        }
+
 
         trainer_name.setText(data.getUsername());
         trainer_specialization.setText(data.getSpecialization());

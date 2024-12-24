@@ -47,6 +47,7 @@ public class DataInitializer {
                     4000.0 + (i * 100),
                     i % 3 == 0 ? "YOGA" : (i % 3 == 1 ? "CARDIO" : "STRENGTH")
             );
+            trainer.setImageUrl("images/trainer.png");
             userService.addUser(trainer);
         }
 

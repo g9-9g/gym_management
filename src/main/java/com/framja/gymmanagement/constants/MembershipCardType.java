@@ -5,13 +5,13 @@ import java.util.List;
 public enum MembershipCardType {
     BASIC("Thành viên Cơ bản", "Truy cập vào các tiện ích cơ bản như thiết bị gym và khu vực chung.",
             List.of("Gym Equipment", "Locker Room"),
-            ""),
+            "images/coban.jpg"),
     PREMIUM("Thành viên Cao cấp", "Truy cập vào tất cả tiện ích, bao gồm hồ bơi và các thiết bị nâng cao.",
             List.of("Gym Equipment", "Swimming Pool", "Advanced Classes"),
-            ""),
+            "images/caocap.jpg"),
     VIP("Thành viên VIP", "Bao gồm mọi quyền lợi của Cao cấp, cộng thêm huấn luyện viên cá nhân và phòng chờ VIP.",
             List.of("Gym Equipment", "Swimming Pool", "Advanced Classes", "Personal Trainer", "VIP Lounge"),
-            "");
+            "images/vip.jpg");
 
     private final String name;
     private final String description;
