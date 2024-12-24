@@ -5,6 +5,7 @@ import com.framja.gymmanagement.interfaces.ActionCommand;
 import com.framja.gymmanagement.interfaces.MembershipService;
 import com.framja.gymmanagement.model.MembershipCard;
 import com.framja.gymmanagement.model.User;
+import com.framja.gymmanagement.role.Member;
 
 import java.time.LocalDate;
 
@@ -21,21 +22,24 @@ public class RegisterMembershipCommand implements ActionCommand<MembershipCard> 
 
     @Override
     public MembershipCard execute() {
-        // Kiểm tra membership hiện tại
-        if (membershipService.hasActiveMembership(user)) {
+        if (!(user instanceof Member member)) {
+            throw new IllegalStateException("User must be of type Member to register a membership.");
+        }
+
+        // Check if the member already has an active membership
+        if (member.hasActiveMembership()) {
             throw new IllegalStateException("You already have an active membership.");
         }
 
-        // Thời hạn mặc định: 3 tháng
+        // Define default duration: 3 months
         int monthsToAdd = 3;
-
-        // Tạo thẻ membership mới
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(monthsToAdd);
-        MembershipCard newCard = new MembershipCard(cardType, startDate, endDate, cardType.getPermissions());
 
-        // Gán thẻ membership mới cho user
-        membershipService.assignMembershipCard(user, newCard);
+        // Create new MembershipCard and assign to member
+        MembershipCard newCard = new MembershipCard(cardType, startDate, endDate, member);
+        membershipService.addMembershipCard(newCard);
+        member.setMembershipCard(newCard);
 
         return newCard;
     }

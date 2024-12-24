@@ -4,6 +4,7 @@ import com.framja.gymmanagement.interfaces.ActionCommand;
 import com.framja.gymmanagement.interfaces.MembershipService;
 import com.framja.gymmanagement.model.MembershipCard;
 import com.framja.gymmanagement.model.User;
+import com.framja.gymmanagement.role.Member;
 
 public class ViewMembershipCommand implements ActionCommand<MembershipCard> {
     private final User user;
@@ -17,7 +18,11 @@ public class ViewMembershipCommand implements ActionCommand<MembershipCard> {
 
     @Override
     public MembershipCard execute() {
-        return membershipService.getMembershipCard(user)
+        if (!(user instanceof Member member)) {
+            throw new IllegalStateException("User must be of type Member to register a membership.");
+        }
+
+        return membershipService.getMembershipCard(member)
                 .orElse(null);
     }
 }

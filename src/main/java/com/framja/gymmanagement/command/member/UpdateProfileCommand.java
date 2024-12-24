@@ -16,7 +16,7 @@ public class UpdateProfileCommand implements ActionCommand<Boolean> {
 
     @Override
     public Boolean execute() {
-        user.setUsername(newUsername);
+//        user.setUsername(newUsername);
         user.setPassword(newPassword);
         return true;
     }

@@ -1,12 +1,12 @@
 package com.framja.gymmanagement.utils;
 
-import com.framja.gymmanagement.interfaces.Role;
+import com.framja.gymmanagement.model.User;
 
 import java.time.LocalDateTime;
 
 public class SessionManager {
     private static SessionManager instance;
-    private Role currentRole;
+    private User CurrentUser;
     private LocalDateTime loginTime;
 
     private SessionManager() {
@@ -19,12 +19,12 @@ public class SessionManager {
         return instance;
     }
 
-    public Role getCurrentRole() {
-        return currentRole;
+    public User getCurrentUser() {
+        return CurrentUser;
     }
 
-    public void setCurrentRole(Role currentRole) {
-        this.currentRole = currentRole;
+    public void setCurrentUser(User currentUser) {
+        this.CurrentUser = currentUser;
         this.loginTime = LocalDateTime.now();
     }
 
@@ -33,11 +33,11 @@ public class SessionManager {
     }
 
     public void clearSession() {
-        this.currentRole = null;
+        this.CurrentUser = null;
         this.loginTime = null;
     }
 
     public boolean isLoggedIn() {
-        return currentRole != null;
+        return CurrentUser != null;
     }
 }

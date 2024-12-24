@@ -1,9 +1,17 @@
 package com.framja.gymmanagement.service;
 
+import com.framja.gymmanagement.constants.MembershipCardType;
 import com.framja.gymmanagement.constants.RoleType;
+import com.framja.gymmanagement.interfaces.MembershipService;
 import com.framja.gymmanagement.interfaces.UserService;
+import com.framja.gymmanagement.model.MembershipCard;
 import com.framja.gymmanagement.model.User;
+import com.framja.gymmanagement.role.Admin;
+import com.framja.gymmanagement.role.Member;
+import com.framja.gymmanagement.role.Trainer;
+import com.framja.gymmanagement.utils.ServiceContainer;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,13 +20,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final List<User> users = new ArrayList<>();
-
-    public UserServiceImpl() {
-        users.add(new User("abc", "123", RoleType.MEMBER, "123456789", "Male", "123 Main St"));
-        users.add(new User("jane_smith", "password456", RoleType.TRAINER, "987654321", "Female", "456 Elm St"));
-        users.add(new User("admin_user", "adminpass", RoleType.ADMIN, "1122334455", "Non-binary", "789 Pine St"));
-
-    }
 
     @Override
     public void addUser(User user) {

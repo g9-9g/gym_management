@@ -1,37 +1,53 @@
 package com.framja.gymmanagement.model;
 
 import com.framja.gymmanagement.constants.MembershipCardType;
+import com.framja.gymmanagement.role.Member;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class MembershipCard {
-    private final MembershipCardType type; // Loại membership
-    private final LocalDate startDate; // Ngày bắt đầu
-    private final LocalDate endDate; // Ngày kết thúc
-    private final List<String> permissions; // Các tài nguyên được phép truy cập
+    private MembershipCardType type;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Member owner;
 
-    public MembershipCard(MembershipCardType type, LocalDate startDate, LocalDate endDate, List<String> permissions) {
+    public MembershipCard(MembershipCardType type, LocalDate startDate, LocalDate endDate, Member owner) {
         this.type = type;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.permissions = permissions;
+        this.owner = owner;
     }
 
     public MembershipCardType getType() {
         return type;
     }
 
+    public void setType(MembershipCardType type) {
+        this.type = type;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public List<String> getPermissions() {
-        return permissions;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Member getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Member owner) {
+        this.owner = owner;
     }
 
     public boolean isActive() {
@@ -44,7 +60,7 @@ public class MembershipCard {
                 "type=" + type +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", permissions=" + permissions +
+                ", owner=" + (owner != null ? owner.getUsername() : "null") +
                 '}';
     }
 }

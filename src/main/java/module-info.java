@@ -16,5 +16,6 @@ module com.framja.gymmanagement {
     exports com.framja.gymmanagement.model;
     exports com.framja.gymmanagement.controller;
     exports com.framja.gymmanagement;
-
+    exports com.framja.gymmanagement.role;
+    exports com.framja.gymmanagement.constants;
 }
