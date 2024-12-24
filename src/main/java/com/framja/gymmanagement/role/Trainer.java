@@ -7,6 +7,7 @@ public class Trainer extends User {
 
     private double salary; // Trường bổ sung dành riêng cho Trainer
     private String specialization;
+    private String imageUrl;
 
     public Trainer(String username, String password, String phoneNumber, String gender, String address, double salary, String specialization) {
         super(username, password, RoleType.TRAINER, phoneNumber, gender, address);
@@ -18,6 +19,14 @@ public class Trainer extends User {
         super(username, password, RoleType.TRAINER);
         this.salary = salary;
         this.specialization = specialization;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     // Getter và Setter cho trường salary

@@ -7,6 +7,7 @@ import com.framja.gymmanagement.model.User;
 public class Member extends User {
 
     private MembershipCard membershipCard;
+    private String imageUrl;
 
     public Member(String username, String password, String phoneNumber, String gender, String address, MembershipCard membershipCard) {
         super(username, password, RoleType.MEMBER, phoneNumber, gender, address);
@@ -14,6 +15,14 @@ public class Member extends User {
         if (membershipCard != null) {
             this.membershipCard.setOwner(this);
         }
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public MembershipCard getMembershipCard() {
