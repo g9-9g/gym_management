@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.framja.gymmanagement.controller.EditTrainerFormController">
+    <children>
+        <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <AnchorPane layoutX="12.0" layoutY="12.0" prefHeight="427.0" prefWidth="627.0" stylesheets="@style/Dashboard/member_dashboard.css">
+                    <children>
+                        <Label layoutX="14.0" layoutY="14.0" text="Edit Trainer">
+                            <font>
+                                <Font size="20.0" />
+                            </font>
+                        </Label>
+                        <FontAwesomeIcon glyphName="EDIT" layoutX="122.0" layoutY="35.0" size="1.5em" />
+                        <!--                        <Label layoutX="86.0" layoutY="78.0" text="Member ID:">-->
+                        <!--                            <font>-->
+                        <!--                                <Font size="13.0" />-->
+                        <!--                            </font>-->
+                        <!--                        </Label>-->
+                        <!--                        <TextField fx:id="edit_patientID" editable="false" layoutX="156.0" layoutY="75.0" />-->
+                        <Label layoutX="112.0" layoutY="114.0" text="Name:">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="edit_name" layoutX="156.0" layoutY="111.0" prefHeight="25.0" prefWidth="179.0" />
+                        <Label layoutX="100.0" layoutY="155.0" text="Gender:">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <ComboBox fx:id="edit_gender" layoutX="156.0" layoutY="152.0" prefHeight="25.0" prefWidth="179.0" promptText="Choose...">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Male" />
+                                    <String fx:value="Female" />
+                                    <String fx:value="Non-binary" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Label layoutX="51.0" layoutY="192.0" text="Contact Number:">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="edit_contactNumber" layoutX="156.0" layoutY="189.0" prefHeight="25.0" prefWidth="179.0" />
+                        <Label layoutX="98.0" layoutY="233.0" text="Address:">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <TextArea fx:id="edit_address" layoutX="156.0" layoutY="233.0" prefHeight="86.0" prefWidth="200.0" />
+                        <Button fx:id="edit_updateBtn" layoutX="220.0" layoutY="373.0" mnemonicParsing="false" onAction="#updateBtn" prefHeight="40.0" prefWidth="230.0" text="Update" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

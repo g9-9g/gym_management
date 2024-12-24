@@ -1,6 +1,7 @@
 package com.framja.gymmanagement.controller;
 
 
+import java.io.IOException;
 import java.net.URL;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -56,7 +58,7 @@ import java.util.List;
 import javafx.geometry.Insets;
 
 import javafx.scene.layout.StackPane;
-
+import javafx.stage.Stage;
 
 
 public class TrainerDashboardController implements Initializable {
@@ -422,8 +424,19 @@ public class TrainerDashboardController implements Initializable {
     @FXML
     private void logoutBtn() {
         SessionManager.getInstance().clearSession();
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setLocation(GymApplication.class.getResource("admin-portal.fxml"));
+        FXMLLoader loader = new FXMLLoader(GymApplication.class.getResource("admin-portal.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Get the current stage and replace it with the login screen
+        Stage stage = (Stage) logout_btn.getScene().getWindow(); // Replace `logout_btn` with the correct button ID
+        stage.setTitle("Admin Portal");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
