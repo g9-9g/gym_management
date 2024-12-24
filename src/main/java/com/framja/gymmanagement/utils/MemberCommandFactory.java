@@ -16,6 +16,7 @@ public class MemberCommandFactory implements CommandFactory {
     private final ClassService classService;
     private final CourseService courseService;
     private final PaymentService paymentService;
+    private final UserService userService;
 
     public MemberCommandFactory(User user) {
         this.user = user;
@@ -24,6 +25,7 @@ public class MemberCommandFactory implements CommandFactory {
         this.paymentService = serviceContainer.getService(PaymentService.class);
         this.classService = serviceContainer.getService(ClassService.class);
         this.courseService = serviceContainer.getService(CourseService.class);
+        this.userService = serviceContainer.getService(UserService.class);
     }
 
     @Override
@@ -57,7 +59,8 @@ public class MemberCommandFactory implements CommandFactory {
                         throw new IllegalArgumentException("Invalid arguments for Register Membership");
                     }
                     return new RegisterMembershipCommand(user, membershipService, (MembershipCardType) args[0]);
-                }))
+                })),
+                new MenuOption<>(10, "View Trainer List", CommandFactory.create(args -> new ViewTrainerListCommand(userService)))
         );
     }
 }

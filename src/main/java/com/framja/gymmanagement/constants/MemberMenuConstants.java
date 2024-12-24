@@ -64,6 +64,11 @@ public class MemberMenuConstants {
      */
     public static final int REGISTER_MEMBERSHIP = 9;
 
+    /** Xem danh sách tất cả các Trainer trong hệ thống.
+     * Không yêu cầu tham số.
+     * Trả về List<Trainer>.
+     */
+    public static final int VIEW_TRAINER_LIST = 10;
     // Constructor riêng tư để ngăn việc khởi tạo lớp.
     private MemberMenuConstants() {
     }

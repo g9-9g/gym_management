@@ -10,6 +10,6 @@ public interface UserService {
     Optional<User> findUserByUsername(String username);
     boolean removeUser(String username);
     List<User> findAllUsers();
-    List<User> findAllUsersByRole(String role);
+    <T> List<T> getAllUsersByRole(Class<T> roleType);
 }
 

@@ -6,6 +6,7 @@ import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.*;
 import com.framja.gymmanagement.role.Member;
+import com.framja.gymmanagement.role.Trainer;
 import com.framja.gymmanagement.utils.DataInitializer;
 import com.framja.gymmanagement.utils.ServiceContainer;
 import com.framja.gymmanagement.utils.SessionManager;
@@ -100,6 +101,11 @@ public class TerminalApplication {
         ActionResult<List<GymClass>> viewParticipatedClassesResult = member.performAction(MemberMenuConstants.VIEW_PARTICIPATED_CLASSES);
         System.out.println(viewParticipatedClassesResult.isSuccess() ? viewParticipatedClassesResult.getData()
                 : viewParticipatedClassesResult.getMessage());
+
+        // Test View Trainer List
+        System.out.println("\nTesting: View Trainer List");
+        ActionResult<List<Trainer>> trainerListResult = member.performAction(10);
+        System.out.println(trainerListResult.isSuccess() ? trainerListResult.getData() : trainerListResult.getMessage());
 
     }
 }

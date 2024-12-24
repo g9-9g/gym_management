@@ -45,9 +45,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsersByRole(String role) {
+    public <T> List<T> getAllUsersByRole(Class<T> roleType) {
         return users.stream()
-                .filter(user -> user.getRole().name().equalsIgnoreCase(role))
-                .collect(Collectors.toList());
+                .filter(roleType::isInstance)
+                .map(roleType::cast)
+                .toList();
     }
 }
