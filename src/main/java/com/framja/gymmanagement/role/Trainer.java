@@ -8,14 +8,16 @@ public class Trainer extends User {
     private double salary; // Trường bổ sung dành riêng cho Trainer
     private String specialization;
 
-    public Trainer(String username, String password, String phoneNumber, String gender, String address, double salary) {
+    public Trainer(String username, String password, String phoneNumber, String gender, String address, double salary, String specialization) {
         super(username, password, RoleType.TRAINER, phoneNumber, gender, address);
         this.salary = salary;
+        this.specialization = specialization;
     }
 
-    public Trainer(String username, String password, double salary) {
+    public Trainer(String username, String password, double salary, String specialization) {
         super(username, password, RoleType.TRAINER);
         this.salary = salary;
+        this.specialization = specialization;
     }
 
     // Getter và Setter cho trường salary

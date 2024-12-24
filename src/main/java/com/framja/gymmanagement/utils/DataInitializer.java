@@ -21,7 +21,7 @@ public class DataInitializer {
         ClassService classService = serviceContainer.getService(ClassService.class);
 
         // Create Trainer
-        Trainer trainer = new Trainer("trainer_user", "trainerpass", "456789123", "Male", "789 Trainer St", 5000.0);
+        Trainer trainer = new Trainer("trainer_user", "trainerpass", "456789123", "Male", "789 Trainer St", 5000.0, "YOGA");
         userService.addUser(trainer);
 
         // Create Members
@@ -83,5 +83,27 @@ public class DataInitializer {
         // Update relationships
         john.setMembershipCard(johnCard);
         jane.setMembershipCard(janeCard);
+
+
+        // Create Equipment
+        Equipment treadmill1 = new Equipment(1, "Treadmill X200", "High-quality treadmill for cardio training", "Cardio", "TechFit", 300.0, 2, "Main Gym Hall", "Good", LocalDate.now().minusYears(2), LocalDate.now().plusYears(1));
+        Equipment benchPress1 = new Equipment(2, "Bench Press Pro", "Standard bench press for strength training", "Strength", "IronForge", 500.0, 1, "Strength Training Room", "Excellent", LocalDate.now().minusYears(1), LocalDate.now().plusYears(2));
+        Equipment dumbbellSet = new Equipment(3, "Dumbbell Set Deluxe", "Adjustable dumbbell set (5-50kg)", "Strength", "PowerGear", 200.0, 10, "Strength Training Room", "Good", LocalDate.now().minusMonths(8), LocalDate.now().plusMonths(16));
+        Equipment yogaMat = new Equipment(4, "Yoga Mat Premium", "Eco-friendly yoga mat", "Flexibility", "ZenFlow", 50.0, 20, "Yoga Studio", "Worn", LocalDate.now().minusYears(3), LocalDate.now().minusMonths(6));
+        Equipment swimmingLaneDivider = new Equipment(5, "Lane Divider Pro", "Lane divider for swimming pools", "Swimming", "SwimMaster", 100.0, 5, "Swimming Pool", "Good", LocalDate.now().minusMonths(10), LocalDate.now().plusMonths(14));
+        Equipment elliptical = new Equipment(6, "Elliptical Trainer E300", "Elliptical machine for low-impact cardio", "Cardio", "MoveIt", 400.0, 1, "Main Gym Hall", "Good", LocalDate.now().minusYears(1), LocalDate.now().plusYears(1));
+        Equipment rowingMachine = new Equipment(7, "Rowing Machine R500", "Advanced rowing machine for full-body cardio", "Cardio", "RowStrong", 600.0, 1, "Cardio Area", "Excellent", LocalDate.now().minusMonths(5), LocalDate.now().plusMonths(18));
+        Equipment kettlebellSet = new Equipment(8, "Kettlebell Set", "Full set of kettlebells (5-30kg)", "Strength", "GymTools", 150.0, 15, "Strength Training Room", "Good", LocalDate.now().minusMonths(18), LocalDate.now().plusMonths(6));
+
+        // Add Equipment to the EquipmentService
+        EquipmentService equipmentService = serviceContainer.getService(EquipmentService.class);
+        equipmentService.addEquipment(treadmill1);
+        equipmentService.addEquipment(benchPress1);
+        equipmentService.addEquipment(dumbbellSet);
+        equipmentService.addEquipment(yogaMat);
+        equipmentService.addEquipment(swimmingLaneDivider);
+        equipmentService.addEquipment(elliptical);
+        equipmentService.addEquipment(rowingMachine);
+        equipmentService.addEquipment(kettlebellSet);
     }
 }

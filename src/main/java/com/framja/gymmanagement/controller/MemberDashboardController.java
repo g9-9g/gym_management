@@ -300,10 +300,10 @@ public class MemberDashboardController implements Initializable {
             gymClassColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
             gymClassColSchedule.setCellValueFactory(new PropertyValueFactory<>("schedule"));
 
-            System.out.println(courseService.getAllCourses());
+            System.out.println(courseService.findAllCourses());
 
             gymClassColDescription.setCellValueFactory(cellData -> {
-                Course cur_course = courseService.getCourseById(cellData.getValue().getCourseId());
+                Course cur_course = courseService.findCourseById(cellData.getValue().getCourseId()).orElse(null);
                 return new SimpleStringProperty(cur_course != null ? cur_course.getDescription() : "");
             });
 

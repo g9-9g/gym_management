@@ -1,21 +1,13 @@
 package com.framja.gymmanagement.service;
 
-import com.framja.gymmanagement.constants.MembershipCardType;
-import com.framja.gymmanagement.constants.RoleType;
-import com.framja.gymmanagement.interfaces.MembershipService;
 import com.framja.gymmanagement.interfaces.UserService;
-import com.framja.gymmanagement.model.MembershipCard;
 import com.framja.gymmanagement.model.User;
-import com.framja.gymmanagement.role.Admin;
 import com.framja.gymmanagement.role.Member;
 import com.framja.gymmanagement.role.Trainer;
-import com.framja.gymmanagement.utils.ServiceContainer;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
 
@@ -51,4 +43,34 @@ public class UserServiceImpl implements UserService {
                 .map(roleType::cast)
                 .toList();
     }
+
+    @Override
+    public boolean updateMember(Member updatedMember) {
+        Optional<User> existingUserOptional = findUserByUsername(updatedMember.getUsername());
+        if (existingUserOptional.isPresent() && existingUserOptional.get() instanceof Member existingMember) {
+            existingMember.setPassword(updatedMember.getPassword());
+            existingMember.setPhoneNumber(updatedMember.getPhoneNumber());
+            existingMember.setAddress(updatedMember.getAddress());
+            existingMember.setGender(updatedMember.getGender());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateTrainer(Trainer updatedTrainer) {
+        Optional<User> existingUserOptional = findUserByUsername(updatedTrainer.getUsername());
+        if (existingUserOptional.isPresent() && existingUserOptional.get() instanceof Trainer existingTrainer) {
+            // Cập nhật từng thuộc tính
+            existingTrainer.setPassword(updatedTrainer.getPassword());
+            existingTrainer.setPhoneNumber(updatedTrainer.getPhoneNumber());
+            existingTrainer.setAddress(updatedTrainer.getAddress());
+            existingTrainer.setGender(updatedTrainer.getGender());
+            existingTrainer.setSalary(updatedTrainer.getSalary());
+            existingTrainer.setSpecialization(updatedTrainer.getSpecialization());
+            return true;
+        }
+        return false;
+    }
+
 }
