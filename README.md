@@ -56,9 +56,3 @@ The **Gym Management System** is a JavaFX-based application designed to efficien
 1. Java 17 or above installed on your system.
 2. Maven installed for dependency management.
 3. A database setup (e.g., MySQL) with the required schema.
-
-### Steps to Run the Project
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/gym-management-system.git
-   cd gym-management-system
