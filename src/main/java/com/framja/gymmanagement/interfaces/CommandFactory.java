@@ -8,7 +8,7 @@ import java.util.function.Function;
 public interface CommandFactory {
     List<MenuOption<?>> createMenuOptions();
 
-    static <T> Function<Object[], ActionCommand<T>> create(Function<Object[], ActionCommand<T>> commandSupplier) {
+    static <T> Function<Object[], ActionCommand<T>> createSupplier(Function<Object[], ActionCommand<T>> commandSupplier) {
         return commandSupplier;
     }
 

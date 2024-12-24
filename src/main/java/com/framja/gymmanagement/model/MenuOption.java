@@ -24,6 +24,7 @@ public class MenuOption<T> {
     }
 
     public ActionCommand<T> createCommand(Object... args) {
+        // Applies this function to the given argument
         return commandFactory.apply(args);
     }
 }

@@ -1,5 +1,6 @@
 package com.framja.gymmanagement;
 
+import com.framja.gymmanagement.constants.AdminMenuConstants;
 import com.framja.gymmanagement.constants.MemberMenuConstants;
 import com.framja.gymmanagement.constants.MembershipCardType;
 import com.framja.gymmanagement.interfaces.ClassService;
@@ -183,7 +184,7 @@ public class TerminalApplication {
         System.out.println(removeEquipmentResult.isSuccess() ? "Equipment removed successfully!" : removeEquipmentResult.getMessage());
 
         // Verify Remove Equipment
-        verifyAddEquipment = admin.performAction(4);
+        verifyAddEquipment = admin.performAction(AdminMenuConstants.VIEW_ALL_EQUIPMENT);
         System.out.println("Equipment list after removing:");
         System.out.println(verifyAddEquipment.isSuccess() ? verifyAddEquipment.getData() : verifyAddEquipment.getMessage());
 
@@ -193,7 +194,7 @@ public class TerminalApplication {
         System.out.println(addUserResult.isSuccess() ? "User added successfully!" : addUserResult.getMessage());
 
         // Verify Add User
-        ActionResult<List<User>> verifyAddUser = admin.performAction(9);
+        ActionResult<List<User>> verifyAddUser = admin.performAction(AdminMenuConstants.FIND_ALL_USERS);
         System.out.println("User list after adding:");
         System.out.println(verifyAddUser.isSuccess() ? verifyAddUser.getData() : verifyAddUser.getMessage());
 
