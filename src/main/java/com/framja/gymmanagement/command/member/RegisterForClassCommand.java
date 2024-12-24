@@ -34,9 +34,9 @@ public class RegisterForClassCommand implements ActionCommand<Boolean> {
     @Override
     public Boolean execute() {
         // 1. Kiểm tra membership
-        if (!membershipService.hasActiveMembership(user)) {
-            throw new IllegalStateException("Membership is not active. Please renew your membership.");
-        }
+//        if (!user) {
+//            throw new IllegalStateException("Membership is not active. Please renew your membership.");
+//        }
 
         // 2. Lấy lớp học
         GymClass gymClass = classService.getClassById(classId);

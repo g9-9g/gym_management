@@ -4,10 +4,14 @@ import com.framja.gymmanagement.command.trainer.AssignTrainerCommand;
 import com.framja.gymmanagement.command.trainer.ViewReceivedPaymentsCommand;
 import com.framja.gymmanagement.command.trainer.ViewTrainerClassCommand;
 import com.framja.gymmanagement.interfaces.ClassService;
+import com.framja.gymmanagement.interfaces.CommandFactory;
 import com.framja.gymmanagement.interfaces.PaymentService;
+import com.framja.gymmanagement.model.MenuOption;
 import com.framja.gymmanagement.model.User;
 
-public class TrainerCommandFactory {
+import java.util.List;
+
+public class TrainerCommandFactory implements CommandFactory {
     private final User self;
     private final ClassService classService;
     private final PaymentService paymentService;
@@ -19,15 +23,17 @@ public class TrainerCommandFactory {
         this.paymentService = serviceContainer.getService(PaymentService.class);
     }
 
-    public ViewTrainerClassCommand createViewTrainerClassCommand() {
-        return new ViewTrainerClassCommand(self, classService);
-    }
-
-    public ViewReceivedPaymentsCommand createViewReceivedPaymentsCommand() {
-        return new ViewReceivedPaymentsCommand(self, paymentService);
-    }
-
-    public AssignTrainerCommand createAssignTrainerCommand(int gymClassId) {
-        return new AssignTrainerCommand(self, gymClassId, classService);
+    @Override
+    public List<MenuOption<?>> createMenuOptions() {
+        return List.of(
+                new MenuOption<>(1, "View My Classes", CommandFactory.create(args -> new ViewTrainerClassCommand(self, classService))),
+                new MenuOption<>(2, "View Received Payments", CommandFactory.create(args -> new ViewReceivedPaymentsCommand(self, paymentService))),
+                new MenuOption<>(3, "Assign Trainer to Class", CommandFactory.create(args -> {
+                    if (args.length < 1 || !(args[0] instanceof Integer)) {
+                        throw new IllegalArgumentException("Invalid arguments for Assign Trainer to Class.");
+                    }
+                    return new AssignTrainerCommand(self, (Integer) args[0], classService);
+                }))
+        );
     }
 }

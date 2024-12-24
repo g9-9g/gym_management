@@ -3,7 +3,6 @@ package com.framja.gymmanagement.controller;
 
 import java.net.URL;
 
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.GymApplication;
@@ -13,7 +12,6 @@ import com.framja.gymmanagement.model.*;
 import com.framja.gymmanagement.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -266,7 +264,7 @@ public class MemberDashboardController implements Initializable {
 
     private void loadUserInfo() {
         int actionId = MemberMenuConstants.VIEW_PROFILE;
-        ActionResult<User> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<User> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
         if (result.isSuccess()) {
             System.out.println(result.getData()); // Error
 //            nav_username.setText(result.getData().getUsername());
@@ -280,7 +278,7 @@ public class MemberDashboardController implements Initializable {
     private void loadGymClass() {
 
         int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
-        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
         System.out.println(result);
 
@@ -307,7 +305,7 @@ public class MemberDashboardController implements Initializable {
 
     private void loadPT() {
         int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
-        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
         if (result.isSuccess()) {
             ptColDescription.setCellValueFactory(new PropertyValueFactory<>("id")); // Assuming ID is appointment ID
@@ -366,7 +364,7 @@ public class MemberDashboardController implements Initializable {
 
     public void loadCourseCard () {
         int actionId = MemberMenuConstants.VIEW_ALL_COURSES;
-        ActionResult<List<Course>> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<List<Course>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
 
         courses_gridPane.getChildren().clear();
@@ -401,7 +399,7 @@ public class MemberDashboardController implements Initializable {
 
     public void loadMembershipCard() {
         int actionId = MemberMenuConstants.VIEW_MEMBERSHIP;
-        ActionResult<MembershipCard> result = SessionManager.getInstance().getCurrentRole().performAction(actionId);
+        ActionResult<MembershipCard> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
         if (result.isSuccess()) {
             MembershipCard membershipCard = result.getData();
             Platform.runLater(() -> {

@@ -1,18 +1,15 @@
 package com.framja.gymmanagement.role;
 
-import com.framja.gymmanagement.model.BaseRole;
-import com.framja.gymmanagement.model.MenuOption;
+import com.framja.gymmanagement.constants.RoleType;
 import com.framja.gymmanagement.model.User;
 
-import java.util.List;
+public class Admin extends User {
 
-public class Admin extends BaseRole {
-    public Admin(User self) {
-        super(self);
+    public Admin(String username, String password, RoleType role, String phoneNumber, String gender, String address) {
+        super(username, password, role, phoneNumber, gender, address);
     }
 
-    @Override
-    protected List<MenuOption<?>> defineMenuOptions() {
-        return null;
+    public Admin(String username, String password, RoleType role) {
+        super(username, password, role);
     }
 }

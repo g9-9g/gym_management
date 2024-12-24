@@ -6,7 +6,6 @@ import java.util.*;
 
 import com.framja.gymmanagement.GymApplication;
 import com.framja.gymmanagement.constants.RoleType;
-import com.framja.gymmanagement.interfaces.UserService;
 import com.framja.gymmanagement.model.*;
 import com.framja.gymmanagement.interfaces.AuthService;
 import com.framja.gymmanagement.role.Admin;
@@ -14,7 +13,6 @@ import com.framja.gymmanagement.role.Member;
 import com.framja.gymmanagement.role.Trainer;
 import com.framja.gymmanagement.utils.ServiceContainer;
 import com.framja.gymmanagement.utils.SessionManager;
-import eu.hansolo.tilesfx.addons.Switch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -100,19 +98,18 @@ public class AuthPortal implements Initializable {
         try {
             Parent root;
             switch (current_user.getRole()) {
-                case RoleType.ADMIN:
-                    Admin admin = new Admin(current_user);
-                    SessionManager.getInstance().setCurrentRole(admin);
+                case ADMIN:
+                    SessionManager.getInstance().setCurrentUser((Admin) current_user);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("AdminDashboard.fxml")));
                     break;
-                case RoleType.MEMBER:
-                    Member member = new Member(current_user);
-                    SessionManager.getInstance().setCurrentRole(member);
+                case MEMBER:
+                    Member member = (Member) current_user;
+                    SessionManager.getInstance().setCurrentUser(member);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("MemberDashboard.fxml")));
                     break;
-                case RoleType.TRAINER:
-                    Trainer trainer = new Trainer(current_user);
-                    SessionManager.getInstance().setCurrentRole(trainer);
+                case TRAINER:
+                    Trainer trainer = (Trainer) current_user;
+                    SessionManager.getInstance().setCurrentUser(trainer);
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("TrainerDashboard.fxml")));
                     break;
                 default:

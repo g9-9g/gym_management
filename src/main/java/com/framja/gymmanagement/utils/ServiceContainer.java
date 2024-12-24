@@ -33,18 +33,36 @@ public class ServiceContainer {
     }
 
     private static void init() {
-        MembershipService membershipService = new MembershipServiceImpl();
-        UserService userService = new UserServiceImpl();
-        ClassService classService = new ClassServiceImpl();
-        CourseService courseService = new CourseServiceImpl();
-        PaymentService paymentService = new PaymentServiceImpl();
-        AuthService authService = new AuthServiceImpl(userService);
         instance = new ServiceContainer();
+
+        System.out.println("Initializing services...");
+
+        MembershipService membershipService = new MembershipServiceImpl();
+        System.out.println("MembershipService initialized.");
         instance.addService(MembershipService.class, membershipService);
-        instance.addService(ClassService.class, classService);
-        instance.addService(UserService.class, userService);
-        instance.addService(CourseService.class, courseService);
+
+        PaymentService paymentService = new PaymentServiceImpl();
+        System.out.println("PaymentService initialized.");
         instance.addService(PaymentService.class, paymentService);
+
+        ClassService classService = new ClassServiceImpl();
+        System.out.println("ClassService initialized.");
+        instance.addService(ClassService.class, classService);
+
+        CourseService courseService = new CourseServiceImpl();
+        System.out.println("CourseService initialized.");
+        instance.addService(CourseService.class, courseService);
+
+        UserService userService = new UserServiceImpl();
+        System.out.println("UserService initialized.");
+        instance.addService(UserService.class, userService);
+
+        AuthService authService = new AuthServiceImpl(userService);
+        System.out.println("AuthService initialized.");
         instance.addService(AuthService.class, authService);
+
+        System.out.println("All services initialized.");
     }
+
+
 }
