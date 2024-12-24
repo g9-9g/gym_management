@@ -1,10 +1,9 @@
 package com.framja.gymmanagement.controller;
 
 import com.framja.gymmanagement.constants.MemberMenuConstants;
-import com.framja.gymmanagement.model.ActionResult;
-import com.framja.gymmanagement.model.Course;
-import com.framja.gymmanagement.model.GymClass;
-import com.framja.gymmanagement.model.MembershipCard;
+import com.framja.gymmanagement.constants.RoleType;
+import com.framja.gymmanagement.constants.TrainerMenuConstants;
+import com.framja.gymmanagement.model.*;
 import com.framja.gymmanagement.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -65,12 +64,24 @@ public class ViewCourseController {
 
     // Action for enrolling in a GymClass
     private void enrollInClass(GymClass gymClass) {
-        int actionId = MemberMenuConstants.REGISTER_FOR_CLASS; // error
-        ActionResult<Boolean> result = SessionManager.getInstance().getCurrentUser().performAction(actionId, gymClass.getId());
-        if (result.isSuccess() && result.getData().equals(true)) {
-            System.out.println("Enrolled in GymClass: " + gymClass.getId());
-        } else {
-            System.out.println("Error ");
+        User cur = SessionManager.getInstance().getCurrentUser();
+        if (cur.getRole() == RoleType.MEMBER) {
+            int actionId = MemberMenuConstants.REGISTER_FOR_CLASS; // error
+            ActionResult<Boolean> result = SessionManager.getInstance().getCurrentUser().performAction(actionId, gymClass.getId());
+            if (result.isSuccess() && result.getData().equals(true)) {
+                System.out.println("Enrolled in GymClass: " + gymClass.getId());
+            } else {
+                System.out.println("Error ");
+            }
+        } else if (cur.getRole() == RoleType.TRAINER) {
+            int actionId = TrainerMenuConstants.ASSIGN_TRAINER_TO_CLASS;
+            ActionResult<Boolean> result = SessionManager.getInstance().getCurrentUser().performAction(actionId, cur, gymClass.getId());
+            if (result.isSuccess() && result.getData().equals(true)) {
+                System.out.println("Enrolled in GymClass: " + gymClass.getId());
+            } else {
+                System.out.println(result.getMessage());
+            }
         }
+
     }
 }

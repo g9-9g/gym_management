@@ -13,10 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
-/**
- *
- * @author WINDOWS 10
- */
 public class TrainerCardController implements Initializable {
 
     @FXML
@@ -43,7 +39,6 @@ public class TrainerCardController implements Initializable {
             trainer_circle.setFill(new ImagePattern(image));
 
         }
-
 
         trainer_name.setText(data.getUsername());
         trainer_specialization.setText(data.getSpecialization());

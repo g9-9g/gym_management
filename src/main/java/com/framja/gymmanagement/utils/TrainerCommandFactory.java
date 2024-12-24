@@ -36,19 +36,19 @@ public class TrainerCommandFactory implements CommandFactory {
                 new MenuOption<>(1, "View My Classes", CommandFactory.createSupplier(args -> new ViewTrainerClassCommand(self, classService))),
                 new MenuOption<>(2, "View Received Payments", CommandFactory.createSupplier(args -> new ViewReceivedPaymentsCommand(self, paymentService))),
                 new MenuOption<>(3, "Assign Trainer to Class", CommandFactory.createSupplier(args -> {
-                    if (args.length < 1 || !(args[0] instanceof Integer)) {
+                    if (args.length < 2 ||  !(args[0] instanceof User) || !(args[1] instanceof Integer)) {
                         throw new IllegalArgumentException("Invalid arguments for Assign Trainer to Class.");
                     }
-                    return new AssignTrainerCommand(self, (Integer) args[0], classService);
+                    return new AssignTrainerCommand((User) args[0], (Integer) args[1], classService);
                 })),
                 new MenuOption<>(4, "View Trainer List", CommandFactory.createSupplier(args -> new ViewTrainerListCommand(userService))),
-                new MenuOption<>(5, "View Classes From Course", CommandFactory.createSupplier(args -> {
+                new MenuOption<>(6, "View Classes From Course", CommandFactory.createSupplier(args -> {
                     if (args.length < 1 || !(args[0] instanceof Integer)) {
                         throw new IllegalArgumentException("Invalid arguments for View Classes From Course");
                     }
                     return new ViewGymClassFromCourseCommand(classService, (Integer) args[0]);
                 })),
-                new MenuOption<>(6, "View All Courses", CommandFactory.createSupplier(args -> new ViewCourseCommand(courseService)))
+                new MenuOption<>(5, "View All Courses", CommandFactory.createSupplier(args -> new ViewCourseCommand(courseService)))
         );
     }
 }

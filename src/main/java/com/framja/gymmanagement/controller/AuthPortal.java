@@ -139,13 +139,15 @@ public class AuthPortal implements Initializable {
                 User cur = authService.login(login_username.getText(), login_password.getText());
 //                System.out.println(cur.getRole());
 
+                System.out.println(cur);
+
                 if (cur == null || cur.getRole() != cur_page_role) {
                     alert.errorMessage("Incorrect Username/Password");
 
                 } else {
                     alert.successMessage("Login Successfully!");
 
-                     redirectToDashboard(cur);
+                    redirectToDashboard(cur);
                     login_loginBtn.getScene().getWindow().hide();
                 }
 

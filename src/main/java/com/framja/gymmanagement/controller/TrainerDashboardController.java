@@ -371,13 +371,15 @@ public class TrainerDashboardController implements Initializable {
 
 
     public void loadCourseCard () {
-        int actionId = MemberMenuConstants.VIEW_ALL_COURSES;
+        int actionId = TrainerMenuConstants.VIEW_ALL_COURSES;
         ActionResult<List<Course>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
         if (result.isSuccess()) {
             courses_gridPane.getChildren().clear();
             courses_gridPane.getColumnConstraints().clear();
             courses_gridPane.getRowConstraints().clear();
+
+            System.out.println(result.getData());
 
             int row = 0, column = 0;
 
