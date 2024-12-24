@@ -100,7 +100,7 @@ public class AuthPortal implements Initializable {
             SessionManager.getInstance().setCurrentUser(current_user);
             switch (current_user.getRole()) {
                 case ADMIN:
-                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("AdminDashboard.fxml")));
+                    root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("admin-dashboard.fxml")));
                     break;
                 case MEMBER:
                     root = FXMLLoader.load(Objects.requireNonNull(GymApplication.class.getResource("MemberDashboard.fxml")));
@@ -292,7 +292,6 @@ public class AuthPortal implements Initializable {
     }
 
     public void switchForm(ActionEvent event) {
-
         if (event.getSource() == login_registerHere) {
             // REGISTRATION FORM WILL SHOW
             login_form.setVisible(false);

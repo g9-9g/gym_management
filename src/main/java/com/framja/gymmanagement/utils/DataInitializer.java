@@ -40,7 +40,7 @@ public class DataInitializer {
         userService.addUser(jane);
 
         // Create Admin
-        Admin admin = new Admin("admin_user", "adminpass", RoleType.ADMIN, "1122334455", "Non-binary", "789 Admin St");
+        Admin admin = new Admin("a", "123", RoleType.ADMIN, "1122334455", "Non-binary", "789 Admin St");
         userService.addUser(admin);
 
         // Create Courses

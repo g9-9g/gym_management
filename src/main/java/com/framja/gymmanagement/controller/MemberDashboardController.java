@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.GymApplication;
 import com.framja.gymmanagement.constants.MemberMenuConstants;
+import com.framja.gymmanagement.constants.MembershipCardType;
 import com.framja.gymmanagement.interfaces.ClassService;
 import com.framja.gymmanagement.interfaces.CourseService;
 import com.framja.gymmanagement.interfaces.UserService;
@@ -19,6 +20,7 @@ import com.framja.gymmanagement.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -152,6 +154,12 @@ public class MemberDashboardController implements Initializable {
 
     @FXML
     private GridPane courses_gridPane;
+
+    @FXML
+    private ComboBox<MembershipCardType> select_card;
+
+    @FXML
+    private Button registration;
 
     // Appointments form
     @FXML
@@ -454,9 +462,35 @@ public class MemberDashboardController implements Initializable {
                 cur_card_begin_date.setText(membershipCard.getStartDate().toString());
                 cur_card_end_date.setText(membershipCard.getEndDate().toString());
             });
+            ObservableList<MembershipCardType> cardTypes = FXCollections.observableArrayList(MembershipCardType.values());
+            select_card.setItems(cardTypes);
         } else {
             System.out.println("Error: " + result.getMessage());
         }
+
+    }
+
+    @FXML
+    private void addCardBtn () {
+        MembershipCardType selectedCard = select_card.getValue();
+        if (selectedCard != null) {
+            System.out.println("Selected Card: " + selectedCard.getName());
+
+            int actionId = MemberMenuConstants.REGISTER_MEMBERSHIP;
+            ActionResult<MembershipCard> result = SessionManager.getInstance().getCurrentUser().performAction(actionId, selectedCard);
+            if (result.isSuccess()) {
+                MembershipCard membershipCard = result.getData();
+                System.out.println("Success membershipCard: " + membershipCard);
+            } else {
+                System.out.println("Already" + result.getMessage());
+            }
+
+            loadMembershipCard();
+
+        } else {
+            System.out.println("No card selected!");
+        }
+
     }
 
     @FXML
@@ -469,6 +503,7 @@ public class MemberDashboardController implements Initializable {
 
         // Show the form based on the button clicked
         if (event.getSource() == dashboard_btn) {
+            loadGymClass();
             home_form.setVisible(true);
         } else if (event.getSource() == trainers_btn) {
             trainers_form.setVisible(true);
