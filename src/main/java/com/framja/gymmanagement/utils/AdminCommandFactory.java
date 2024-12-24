@@ -135,9 +135,7 @@ public class AdminCommandFactory implements CommandFactory {
                         throw new IllegalArgumentException("Invalid arguments for View Classes From Course");
                     }
                     return new ViewGymClassFromCourseCommand(classService, (Integer) args[0]);
-                })),
-                new MenuOption<>(21, "View All Courses", CommandFactory.createSupplier(args -> new ViewCourseCommand(courseService)))
-
+                }))
         );
     }
 

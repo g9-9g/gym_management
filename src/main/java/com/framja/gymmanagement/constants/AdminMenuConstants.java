@@ -34,8 +34,7 @@ public class AdminMenuConstants {
     public static final int READ_ALL_GYMCLASSES = 17;
     public static final int UPDATE_GYMCLASS = 18;
     public static final int DELETE_GYMCLASS = 19;
-    public static final int VIEW_ALL_COURSES = 20;
-    public static final int VIEW_CLASSES_FROM_COURSE = 21;
+    public static final int VIEW_CLASSES_FROM_COURSE = 20;
 
     private AdminMenuConstants() {
     }

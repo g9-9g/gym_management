@@ -4,6 +4,7 @@ package com.framja.gymmanagement.controller;
 import java.net.URL;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.constants.AdminMenuConstants;
@@ -25,14 +26,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -239,33 +233,21 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void loadMember() {
-//        gymClassTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
         int actionId = AdminMenuConstants.FIND_ALL_USERS;
         ActionResult<List<User>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
-//        List<Trainer> trainers = usr.stream()
-//                .filter(user -> user instanceof Trainer)
-//                .map(user -> (Trainer) user)
-//                .collect(Collectors.toList());
-
         if (result.isSuccess()) {
-            System.out.println("Result: " + result.getData());
             List<User> usr = result.getData();
 
             List<User> members = usr.stream()
                     .filter(user -> user.getRole() == RoleType.MEMBER)
                     .collect(Collectors.toList());
 
-            System.out.println(members);
-
-//            gymClassColDescription.setCellValueFactory(new PropertyValueFactory<>("id"));
             memberColusername.setCellValueFactory(new PropertyValueFactory<>("username"));
             memberColpassword.setCellValueFactory(new PropertyValueFactory<>("password"));
             memberColphoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
             memberColgender.setCellValueFactory(new PropertyValueFactory<>("gender"));
             memberColaddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-
 
             centerAlignColumnContent(memberColusername);
             centerAlignColumnContent(memberColpassword);
@@ -273,63 +255,78 @@ public class AdminDashboardController implements Initializable {
             centerAlignColumnContent(memberColgender);
             centerAlignColumnContent(memberColaddress);
 
-            memberColusername.prefWidthProperty().bind(member_table.widthProperty().multiply(0.2)); // 20%
-            memberColpassword.prefWidthProperty().bind(member_table.widthProperty().multiply(0.4)); // 40%
-            memberColphoneNumber.prefWidthProperty().bind(member_table.widthProperty().multiply(0.2)); // 20%
-            memberColgender.prefWidthProperty().bind(member_table.widthProperty().multiply(0.2));
-            memberColaddress.prefWidthProperty().bind(member_table.widthProperty().multiply(0.2));
+            // Thiết lập CellFactory cho nút Edit
+            editColumn.setCellFactory(col -> new TableCell<>() {
+                private final Button editButton = new Button("Edit");
 
-            // Add Edit button
-//            editColumn.setCellFactory(col -> new TableCell<Button>() {
-//                private final Button editButton = new Button("Edit");
-//
-//                {
-//                    editButton.setOnAction(event -> {
-//                        User member = getTableView().getItems().get(getIndex());
-//                        handleEdit(member);
-//                    });
-//                }
-//
-//                @Override
-//                protected void updateItem(Void item, boolean empty) {
-//                    super.updateItem(item, empty);
-//                    if (empty) {
-//                        setGraphic(null);
-//                    } else {
-//                        setGraphic(editButton);
-//                    }
-//                }
-//            });
-//
-//            // Add Delete button
-//            deleteColumn.setCellFactory(col -> new TableCell<>() {
-//                private final Button deleteButton = new Button("Delete");
-//
-//                {
-//                    deleteButton.setOnAction(event -> {
-//                        User member = getTableView().getItems().get(getIndex());
-//                        handleDelete(member);
-//                    });
-//                }
-//
-//                @Override
-//                protected void updateItem(Void item, boolean empty) {
-//                    super.updateItem(item, empty);
-//                    if (empty) {
-//                        setGraphic(null);
-//                    } else {
-//                        setGraphic(deleteButton);
-//                    }
-//                }
-//            });
+                {
+                    editButton.setOnAction(event -> {
+                        User member = getTableView().getItems().get(getIndex());
+                        handleEdit(member);
+                    });
+                }
 
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(editButton);
+                    }
+                }
+            });
+
+            // Thiết lập CellFactory cho nút Delete
+            deleteColumn.setCellFactory(col -> new TableCell<>() {
+                private final Button deleteButton = new Button("Delete");
+
+                {
+                    deleteButton.setOnAction(event -> {
+                        User member = getTableView().getItems().get(getIndex());
+                        handleDelete(member);
+                    });
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(deleteButton);
+                    }
+                }
+            });
+
+            // Gán dữ liệu vào bảng
             member_table.setItems(FXCollections.observableArrayList(members));
         } else {
             System.out.println("Error: " + result.getMessage());
         }
-
-
     }
+
+    private void handleEdit(User member) {
+        System.out.println("Edit button clicked for: " + member.getUsername());
+        // TODO: Hiển thị một form hoặc dialog để chỉnh sửa thông tin thành viên
+        // Bạn có thể sử dụng Stage hoặc Dialog để hiển thị form chỉnh sửa.
+    }
+
+    private void handleDelete(User member) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete member: " + member.getUsername() + "?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            member_table.getItems().remove(member);
+            System.out.println("Deleted member: " + member.getUsername());
+            // TODO: Thực hiện xóa thành viên khỏi database (nếu cần)
+        }
+    }
+
+
 
     private void loadPT() {
         int actionId = TrainerMenuConstants.VIEW_RECEIVED_PAYMENTS;
