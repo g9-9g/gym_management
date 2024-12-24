@@ -1,5 +1,6 @@
 package com.framja.gymmanagement.utils;
 
+import com.framja.gymmanagement.command.admin.UpdateMemberCommand;
 import com.framja.gymmanagement.command.member.*;
 import com.framja.gymmanagement.constants.MembershipCardType;
 import com.framja.gymmanagement.interfaces.*;
@@ -7,6 +8,7 @@ import com.framja.gymmanagement.interfaces.CommandFactory;
 import com.framja.gymmanagement.model.MembershipCard;
 import com.framja.gymmanagement.model.MenuOption;
 import com.framja.gymmanagement.model.User;
+import com.framja.gymmanagement.role.Member;
 
 import java.util.List;
 
@@ -33,10 +35,10 @@ public class MemberCommandFactory implements CommandFactory {
         return List.of(
                 new MenuOption<>(1, "View Profile", CommandFactory.create(args -> new ViewProfileCommand(user))),
                 new MenuOption<>(2, "Update Profile", CommandFactory.create(args -> {
-                    if (args.length < 2 || !(args[0] instanceof String) || !(args[1] instanceof String)) {
-                        throw new IllegalArgumentException("Invalid arguments for Update Profile");
+                    if (args.length < 1 || !(args[0] instanceof Member)) {
+                        throw new IllegalArgumentException("Invalid arguments for Update Member");
                     }
-                    return new UpdateProfileCommand(user, (String) args[0], (String) args[1]);
+                    return new UpdateMemberCommand(userService, (Member) args[0]);
                 })),
                 new MenuOption<>(3, "View Participated Gym Classes", CommandFactory.create(args -> new ViewParticipatedGymClass(user, classService))),
                 new MenuOption<>(4, "View All Courses", CommandFactory.create(args -> new ViewCourseCommand(courseService))),

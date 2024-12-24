@@ -7,6 +7,7 @@ import com.framja.gymmanagement.model.Payment;
 import com.framja.gymmanagement.model.User;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 public class RegisterForClassCommand implements ActionCommand<Boolean> {
@@ -51,8 +52,9 @@ public class RegisterForClassCommand implements ActionCommand<Boolean> {
 
         // 4. Lấy thông tin khóa học
         int courseId = gymClass.getCourseId();
-        Course course = courseService.getCourseById(courseId);
-        if (course == null) throw new IllegalArgumentException("Course not exists");
+        Optional<Course> courseOptional = courseService.findCourseById(courseId);
+        if (courseOptional.isEmpty()) throw new IllegalArgumentException("Course not exists");
+        Course course = courseOptional.get();
         double coursePrice = course.getPrice();
         // 5. Tạo thanh toán
         User instructor = gymClass.getInstructor();

@@ -61,6 +61,10 @@ public class ServiceContainer {
         System.out.println("AuthService initialized.");
         instance.addService(AuthService.class, authService);
 
+        EquipmentService equipmentService = new EquipmentServiceImpl();
+        System.out.println("EquipmentService initialized.");
+        instance.addService(EquipmentService.class, equipmentService);
+
         System.out.println("All services initialized.");
     }
 
