@@ -3,6 +3,8 @@ package com.framja.gymmanagement.controller;
 
 import java.net.URL;
 
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import com.framja.gymmanagement.GymApplication;
@@ -25,6 +27,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -36,8 +39,10 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 
@@ -109,7 +114,7 @@ public class MemberDashboardController implements Initializable {
 
 
     @FXML
-    private Circle home_doctor_circle;
+    private Circle card_circle;
 
     @FXML
     private Label cur_card_name;
@@ -122,19 +127,19 @@ public class MemberDashboardController implements Initializable {
 
 
     @FXML
-    private TableView<GymClass> ptTableView;
+    private TableView<Payment> ptTableView;
 
     @FXML
-    private TableColumn<GymClass, String> ptColDescription;
+    private TableColumn<Payment, String> ptColDescription;
 
     @FXML
-    private TableColumn<GymClass, String> ptColTrainer;
+    private TableColumn<Payment, String> ptColPaymentId;
 
     @FXML
-    private TableColumn<GymClass, String> ptColDay;
+    private TableColumn<Payment, String> ptColAmount;
 
     @FXML
-    private TableColumn<GymClass, String> ptColTime;
+    private TableColumn<Payment, String> ptColTime;
 
     @FXML
     private TableColumn<?, ?> home_appointment_col_doctor;
@@ -247,20 +252,15 @@ public class MemberDashboardController implements Initializable {
     @FXML
     private AnchorPane home_form, trainers_form, appointments_form, profile_form, gymclasses_form;
 
-    // Button action methods
-    @FXML
-    private void logoutBtn() {
-        System.out.println("Logout button clicked");
-    }
 
     // Implements
     private UserService userService;
     private CourseService courseService;
     private ClassService classService;
 
-    private <T> void centerAlignColumnContent(TableColumn<GymClass, T> column) {
+    private <S, T> void centerAlignColumnContent(TableColumn<S, T> column) {
         column.setCellFactory(tc -> {
-            TableCell<GymClass, T> cell = new TableCell<>() {
+            TableCell<S, T> cell = new TableCell<>() {
                 @Override
                 protected void updateItem(T item, boolean empty) {
                     super.updateItem(item, empty);
@@ -283,8 +283,9 @@ public class MemberDashboardController implements Initializable {
         ActionResult<User> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
         if (result.isSuccess()) {
             System.out.println(result.getData()); // Error
-//            nav_username.setText(result.getData().getUsername());
-//            top_username.setText(result.getData().getUsername());
+            User cur = result.getData();
+            nav_username.setText(cur.getUsername());
+            top_username.setText(cur.getUsername());
         } else {
             System.out.println("Error loading User Information");
         }
@@ -339,31 +340,39 @@ public class MemberDashboardController implements Initializable {
     }
 
     private void loadPT() {
-        int actionId = MemberMenuConstants.VIEW_PARTICIPATED_CLASSES;
-        ActionResult<List<GymClass>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
+        int actionId = MemberMenuConstants.VIEW_PAYMENT_HISTORY;
+        ActionResult<List<Payment>> result = SessionManager.getInstance().getCurrentUser().performAction(actionId);
 
         if (result.isSuccess()) {
-            ptColDescription.setCellValueFactory(new PropertyValueFactory<>("id")); // Assuming ID is appointment ID
-            ptColDay.setCellValueFactory(new PropertyValueFactory<>("schedule"));
-//            ptColTrainer.setCellValueFactory(new PropertyValueFactory<>("instructor"));
-            ptColTime.setCellValueFactory(new PropertyValueFactory<>("schedule"));
+            // Set up columns to bind to Payment properties
+            ptColPaymentId.setCellValueFactory(new PropertyValueFactory<>("paymentId"));
+            ptColDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+//            ptColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+//            ptColTime.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-            ptColTrainer.setCellValueFactory(cellData -> {
-                User instructor = cellData.getValue().getInstructor();
-                return new SimpleStringProperty(instructor != null ? instructor.getUsername() : "");
+            ptColAmount.setCellValueFactory(cellData -> {
+                double amount = cellData.getValue().getAmount(); // Assuming getAmount returns double
+                return new SimpleStringProperty(String.format("%.2f", amount));
             });
 
+            // Custom CellValueFactory for date (format LocalDate to string)
+            ptColTime.setCellValueFactory(cellData -> {
+                LocalDate date = cellData.getValue().getDate(); // Assuming getDate returns LocalDate
+                return new SimpleStringProperty(date != null ? date.toString() : ""); // Format as needed
+            });
+            centerAlignColumnContent(ptColPaymentId);
             centerAlignColumnContent(ptColDescription);
-            centerAlignColumnContent(ptColDay);
-            centerAlignColumnContent(ptColTrainer);
+            centerAlignColumnContent(ptColAmount);
             centerAlignColumnContent(ptColTime);
 
-            // Set items in the table
+            // Populate the table
             ptTableView.setItems(FXCollections.observableArrayList(result.getData()));
         } else {
             System.out.println("Error: " + result.getMessage());
         }
     }
+
+
 
     public void loadTrainerCard() {
         int actionId = MemberMenuConstants.VIEW_TRAINER_LIST;
@@ -458,6 +467,9 @@ public class MemberDashboardController implements Initializable {
         if (result.isSuccess()) {
             MembershipCard membershipCard = result.getData();
             Platform.runLater(() -> {
+                Image img = new Image(GymApplication.class.getResource(membershipCard.getType().getImageUrl()).toExternalForm());
+                card_circle.setFill(new ImagePattern(img));
+
                 cur_card_name.setText(membershipCard.getType().getName());
                 cur_card_begin_date.setText(membershipCard.getStartDate().toString());
                 cur_card_end_date.setText(membershipCard.getEndDate().toString());
@@ -491,6 +503,13 @@ public class MemberDashboardController implements Initializable {
             System.out.println("No card selected!");
         }
 
+    }
+
+    @FXML
+    private void logoutBtn() {
+        SessionManager.getInstance().clearSession();
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(GymApplication.class.getResource("admin-portal.fxml"));
     }
 
     @FXML
@@ -543,7 +562,6 @@ public class MemberDashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         userService = ServiceContainer.getInstance().getService(UserService.class);
         courseService = ServiceContainer.getInstance().getService(CourseService.class);
         classService = ServiceContainer.getInstance().getService(ClassService.class);
